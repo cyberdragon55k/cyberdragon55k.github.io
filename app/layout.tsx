@@ -18,8 +18,8 @@ const _syne = Syne({
 })
 
 export const metadata: Metadata = {
-  title: "System.Ref - Creative Developer & Designer",
-  description: "Architecting digital experiences through a lens of brutalist minimalism and retro-futurism.",
+  title: "SYSTEM.REF // Aditya Namdeo",
+  description: "Computer Science Student & Machine Learning Intern. Building intelligent systems and clean user interfaces",
   generator: "v0.app",
   icons: {
     icon: [

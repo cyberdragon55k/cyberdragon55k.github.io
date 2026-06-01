@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "deploy": "gh-pages -d out"
+    "deploy": "echo. > out/.nojekyll && gh-pages -d out -b gh-pages --dotfiles"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
