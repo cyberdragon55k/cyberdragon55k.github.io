@@ -56,8 +56,8 @@ export default function Home() {
           <div className="logo">System.Ref</div>
           <nav className="nav-links">
             <a href="#work">PROJECTS</a>
-            <a href="#lab">LAB</a>
-            <a href="#archive">ARCHIVE</a>
+            <a href="#lab">SKILLS</a>
+            <a href="#archive">EXPERIENCE</a>
             <a href="#contact">CONTACT</a>
           </nav>
           <div className="system-status">SYS_UP: 24:12:05:08 | CPU: 12%</div>
@@ -70,11 +70,12 @@ export default function Home() {
           <div className="hero-content">
             <p style={{ color: "var(--accent)", marginBottom: "10px" }}>{"[ INITIALIZING PROTOCOL... ]"}</p>
             <h1>
-              Creative <span>Developer</span> &amp; Designer
+              DATA & ML <span>SYSTEMS</span> &amp; DEVELOPER
             </h1>
             <p>
-              Architecting digital experiences through a lens of brutalist minimalism and retro-futurism. Based in the
-              digital ether.
+              Engineering predictive models, optimizing data pipelines,
+              and implementing algorithmic structures from back-end logic 
+              to responsive user interfaces.
             </p>
             <a href="#work" className="btn-retro">
               EXPLORE FILES
