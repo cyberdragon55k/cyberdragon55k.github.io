@@ -18,9 +18,18 @@ const _syne = Syne({
 })
 
 export const metadata: Metadata = {
-  title: "SYSTEM.REF // Aditya Namdeo",
-  description: "Computer Science Student & Machine Learning Intern. Building intelligent systems and clean user interfaces",
-  generator: "v0.app",
+  title: "Aditya Namdeo | Software Developer",
+  description: "Portfolio of Aditya Namdeo showcasing software engineering, AI, Python, and web development projects.",
+  keywords: [
+    "Aditya Namdeo", 
+    "Software Developer", 
+    "Machine Learning Intern", 
+    "Suvidha Foundation", 
+    "Computer Science", 
+    "Data Engineering", 
+    "Next.js"
+  ],
+  authors: [{ name: "Aditya Namdeo" }],
   icons: {
     icon: [
       {
@@ -38,6 +47,12 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
+  openGraph: {
+    title: "Aditya Namdeo | Software Developer",
+    description: "Portfolio of Aditya Namdeo showcasing software engineering, AI, Python, and web development projects.",
+    type: "website",
+    url: "https://adityanamdeo.qzz.io/",
+  }
 }
 
 export default function RootLayout({

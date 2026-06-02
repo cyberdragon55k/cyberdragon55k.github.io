@@ -131,8 +131,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: crosshair;
   }
+  
   body {
     @apply bg-background text-foreground;
     /* Override with retro portfolio styles */
@@ -142,6 +142,16 @@
     overflow-x: hidden;
     background-image: radial-gradient(circle, rgb(51, 51, 51) 1px, transparent 1px);
     background-size: 30px 30px;
+  }
+
+  /* Universal custom cursor fallback definition */
+  html, body, * {
+    cursor: cell !important; /* Low-level system crosshair backup */
+  }
+
+  /* Sharp precision targeting look over interactive elements */
+  a, button, input, textarea, select, [role="button"] {
+    cursor: crosshair !important;
   }
 
   /* CRT scanline effect overlay */
