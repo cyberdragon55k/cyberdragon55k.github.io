@@ -1,26 +1,3 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    @media (prefers-color-scheme: light) {
-      .background { fill: black; }
-      .foreground { fill: white; }
-    }
-    @media (prefers-color-scheme: dark) {
-      .background { fill: white; }
-      .foreground { fill: black; }
-    }
-  </style>
-  <g clip-path="url(#clip0_7960_43945)">
-    <rect class="background" width="180" height="180" rx="37" />
-    <g style="transform: scale(95%); transform-origin: center">
-      <path class="foreground"
-        d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z" />
-      <path class="foreground"
-        d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z" />
-    </g>
-  </g>
-  <defs>
-    <clipPath id="clip0_7960_43945">
-      <rect width="180" height="180" fill="white" />
-    </clipPath>
-  </defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="96" height="96" viewBox="0 0 96 96"><metadata><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"><rdf:Description><dc:creator>RealFaviconGenerator</dc:creator><dc:source>https://realfavicongenerator.net</dc:source></rdf:Description></rdf:RDF></metadata><image width="96" height="96" xlink:href="data:image/png;base64,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"></image><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: invert(100%); } }
+</style></svg>

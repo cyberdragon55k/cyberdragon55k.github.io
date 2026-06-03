@@ -250,12 +250,25 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* SEC_02: Portfolio Deployments */}
+        
+{/* SEC_02: Portfolio Deployments */}
         <section id="work" style={{ scrollMarginTop: "80px" }}>
           <h2 className="section-title">Latest Deployments</h2>
           <div className="portfolio-grid">
+            
+            {/* PROJECT_ALPHA CARD */}
             <div className="project-card">
+              
+              {/* Overlay container with spacing */}
+              <div className="project-overlay">
+                <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  GITHUB
+                </a>
+                <a href="#" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  LIVE_VIEW
+                </a>
+              </div>
+
               <div className="window-header" style={{ background: "#333", color: "#fff" }}>
                 <span>PROJECT_ALPHA // NEWSSUMM++</span>
                 <div className="window-controls">
@@ -264,7 +277,9 @@ export default function Home() {
                   <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
                 </div>
               </div>
+              
               <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80" alt="Retro Tech" className="project-img" />
+              
               <div className="project-info">
                 <span className="project-tag">#DATA_ENGINEERING #NLP</span>
                 <h3 className="project-title">NewsSumm++ Corpus Optimizer</h3>
