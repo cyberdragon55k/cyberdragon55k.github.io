@@ -413,7 +413,10 @@ header {
   margin-bottom: 100px;
 }
 
+/* --- UPDATED PROJECT CARD STYLES --- */
+
 .project-card {
+  position: relative;
   border: 2px solid var(--border-color);
   background: var(--surface);
   transition: 0.3s;
@@ -425,12 +428,54 @@ header {
   box-shadow: 8px 8px 0px var(--accent-retro);
 }
 
+/* Updated overlay: Covers the entire card area on hover */
+.project-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 20; /* High enough to cover header, image, and info */
+}
+
+.project-card:hover .project-overlay {
+  opacity: 1;
+}
+
+/* The orange link buttons */
+.overlay-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-family: "Space Mono", monospace;
+  font-size: 0.8rem;
+  padding: 10px 20px;
+  border: 2px solid var(--accent-retro);
+  background: transparent;
+  transition: all 0.2s;
+  cursor: crosshair;
+}
+
+.overlay-link:hover {
+  background: var(--accent-retro);
+  color: var(--bg-color);
+  font-weight: bold;
+}
+
+/* Image and Info styling */
 .project-img {
   width: 100%;
   height: 250px;
   object-fit: cover;
   border-bottom: 2px solid var(--border-color);
   filter: grayscale(100%) sepia(20%);
+  display: block;
 }
 
 .project-info {

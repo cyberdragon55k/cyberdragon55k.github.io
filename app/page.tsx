@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [uptime, setUptime] = useState(0)
+  const [showAllProjects, setShowAllProjects] = useState(false) // Added state for hidden projects
 
   useEffect(() => {
     // Dynamic Session Uptime Counter
@@ -251,7 +252,7 @@ export default function Home() {
           </div>
         </section>
         
-{/* SEC_02: Portfolio Deployments */}
+        {/* SEC_02: Portfolio Deployments */}
         <section id="work" style={{ scrollMarginTop: "80px" }}>
           <h2 className="section-title">Latest Deployments</h2>
           <div className="portfolio-grid">
@@ -259,9 +260,40 @@ export default function Home() {
             {/* PROJECT_ALPHA CARD */}
             <div className="project-card">
               
-              {/* Overlay container with spacing */}
+              {/* ======================================================= */}
+              {/* ⚠️ TEMPORARY UNDER CONSTRUCTION OVERLAY - DELETE WHEN FINISHED ⚠️ */}
+              <div style={{
+                position: "absolute",
+                inset: 0,
+                backgroundColor: "rgba(0, 0, 0, 0.85)",
+                backdropFilter: "blur(3px)",
+                zIndex: 30, // High enough to block the hover overlay
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "2px dashed var(--accent)"
+              }}>
+                <div style={{ 
+                  background: "var(--accent)", 
+                  color: "#000", 
+                  padding: "8px 16px", 
+                  fontFamily: "monospace", 
+                  fontWeight: "900", 
+                  letterSpacing: "2px", 
+                  transform: "rotate(-2deg)",
+                  boxShadow: "4px 4px 0px #000"
+                }}>
+                  [ SYS_LOCK: UNDER_CONSTRUCTION ]
+                </div>
+                <p style={{ color: "var(--accent)", fontSize: "0.75rem", fontFamily: "monospace", marginTop: "16px", textTransform: "uppercase" }}>
+                  <span className="cursor-blink">_</span> Deployment pending
+                </p>
+              </div>
+              {/* ======================================================= */}
+
               <div className="project-overlay">
-                <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/cyberdragon55k/Avi" className="overlay-link" target="_blank" rel="noopener noreferrer">
                   GITHUB
                 </a>
                 <a href="#" className="overlay-link" target="_blank" rel="noopener noreferrer">
@@ -270,7 +302,7 @@ export default function Home() {
               </div>
 
               <div className="window-header" style={{ background: "#333", color: "#fff" }}>
-                <span>PROJECT_ALPHA // NEWSSUMM++</span>
+                <span>PROJECT_ALPHA // AVI_ENGINE</span>
                 <div className="window-controls">
                   <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
                   <button className="window-btn" aria-label="Maximize"><span className="maximize-icon"></span></button>
@@ -278,18 +310,29 @@ export default function Home() {
                 </div>
               </div>
               
-              <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80" alt="Retro Tech" className="project-img" />
+              <img src="/Avi.png" alt="Retro Tech" className="project-img" />
               
               <div className="project-info">
-                <span className="project-tag">#DATA_ENGINEERING #NLP</span>
-                <h3 className="project-title">NewsSumm++ Corpus Optimizer</h3>
+                <span className="project-tag">#COMPUTER_VISION #GENERATIVE_AI</span>
+                <h3 className="project-title">Avi Automated Visual Intelligence</h3>
                 <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                  Engineered a highly refined text dataset by designing rule-based parsing algorithms to clear formatting noise from large text collections.
+                  Engineered an AI-powered pipeline integrating FFmpeg, Firebase, and the Gemini Vision API to automatically extract and classify screen data streams into intelligent insights.
                 </p>
               </div>
             </div>
 
+            {/* PROJECT_BETA CARD */}
             <div className="project-card">
+              {/* Added Overlay Layer Here */}
+              <div className="project-overlay">
+                <a href="https://github.com/cyberdragon55k/Used-Bike-Price-Predictor" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  GITHUB
+                </a>
+                <a href="https://used-bike-price.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  LIVE_VIEW
+                </a>
+              </div>
+
               <div className="window-header" style={{ background: "#333", color: "#fff" }}>
                 <span>PROJECT_BETA // VALUATION_ENGINE</span>
                 <div className="window-controls">
@@ -298,36 +341,130 @@ export default function Home() {
                   <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
                 </div>
               </div>
-              <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&q=80" alt="Coding" className="project-img" />
+              <img src="/used-bike.png" alt="Coding" className="project-img" />
               <div className="project-info">
                 <span className="project-tag">#MACHINE_LEARNING #REGRESSION</span>
                 <h3 className="project-title">Used Bike Price Predictor</h3>
                 <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                  Developed an end-to-end ML valuation matrix using custom localized feature tracking pipelines to calculate marketplace asset values.
+                  Developed a high-precision ML valuation engine using linear regression to predict fair market motorcycle prices with 94% accuracy.
                 </p>
               </div>
             </div>
 
+            {/* PROJECT_GAMMA CARD */}
             <div className="project-card">
+              {/* Added Overlay Layer Here */}
+              <div className="project-overlay">
+                <a href="https://github.com/cyberdragon55k/movie_recommender_system" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  GITHUB
+                </a>
+                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  LIVE_VIEW
+                </a>
+              </div>
+
               <div className="window-header" style={{ background: "#333", color: "#fff" }}>
-                <span>PROJECT_GAMMA // AUTOMATION</span>
+                <span>PROJECT_GAMMA // RECOMMENDER</span>
                 <div className="window-controls">
                   <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
                   <button className="window-btn" aria-label="Maximize"><span className="maximize-icon"></span></button>
                   <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
                 </div>
               </div>
-              <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=600&q=80" alt="Abstract Art" className="project-img" />
+              <img src="/movie-recsys.png" alt="Abstract Art" className="project-img" />
               <div className="project-info">
-                <span className="project-tag">#SYSTEMS #RASPBERRY_PI</span>
-                <h3 className="project-title">n8n Automation Architecture</h3>
+                <span className="project-tag">#MACHINE_LEARNING #NLP</span>
+                <h3 className="project-title">Content-Based Movie Recommender</h3>
                 <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                  Configured a local server system node on hardware utilizing specialized automated workflows for system syncs.
+                  Deployed an interactive application that calculates content similarity across thousands of data points to fetch live movie recommendations via the TMDb API.
                 </p>
               </div>
             </div>
           </div>
+
+          {/* HIDDEN ARCHIVE GRID */}
+          {showAllProjects && (
+            <div className="portfolio-grid" style={{ marginTop: "30px", animation: "fadeIn 0.3s ease-in" }}>
+              
+              {/* PROJECT_DELTA: NEWSSUMM++ */}
+              <div className="project-card">
+                <div className="project-overlay">
+                  <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  GITHUB
+                </a>
+                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  LIVE_VIEW
+                </a>
+                </div>
+                <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+                  <span>PROJECT_DELTA // NEWSSUMM++</span>
+                  <div className="window-controls">
+                    <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
+                    <button className="window-btn" aria-label="Maximize"><span className="maximize-icon"></span></button>
+                    <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
+                  </div>
+                </div>
+                <img src="/newssumm-image.jpg" alt="Data Engineering" className="project-img" />
+                <div className="project-info">
+                  <span className="project-tag">#DATA_ENGINEERING #NLP</span>
+                  <h3 className="project-title">NewsSumm++ Corpus Optimizer</h3>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                    Engineered a highly refined text dataset by designing rule-based parsing algorithms to clear formatting noise from large text collections.
+                  </p>
+                </div>
+              </div>
+
+
+              {/* PROJECT_DELTA: NEWSSUMM++ */}
+              <div className="project-card">
+                <div className="project-overlay">
+                  <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  GITHUB
+                </a>
+                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
+                  LIVE_VIEW
+                </a>
+                </div>
+                <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+                  <span>PROJECT_EPSILON // AUTOMATION</span>
+                  <div className="window-controls">
+                    <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
+                    <button className="window-btn" aria-label="Maximize"><span className="maximize-icon"></span></button>
+                    <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
+                  </div>
+                </div>
+                {/* Remember to add an n8n-image.jpg to your public folder */}
+                <img src="/n8n-image.jpg" alt="Automation Architecture" className="project-img" />
+                <div className="project-info">
+                  <span className="project-tag">#SYSTEMS #RASPBERRY_PI</span>
+                  <h3 className="project-title">n8n Automation Architecture</h3>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                    Configured a local server system node on hardware utilizing specialized automated workflows for system syncs.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          )}
+
+          {/* LOAD MORE BUTTON CONTROLLER */}
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", width: "100%" }}>
+            <button 
+              onClick={() => setShowAllProjects(!showAllProjects)} 
+              className="btn-retro"
+              style={{ 
+                cursor: "crosshair", 
+                fontFamily: "monospace", 
+                letterSpacing: "1px",
+                fontSize: "0.85rem",
+                padding: "12px 24px"
+              }}
+            >
+              {showAllProjects ? "[-] COLLAPSE_DIRECTORY" : "[+] EXPAND_ARCHIVE"}
+            </button>
+          </div>
         </section>
+        
 
         {/* SEC_03: Experience & Education Vertical Stack Tracker */}
         <section id="experience" style={{ scrollMarginTop: "80px", marginTop: "80px", marginBottom: "80px" }} className="font-mono">
@@ -336,12 +473,14 @@ export default function Home() {
           </div>
 
           <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", marginBottom: "32px", letterSpacing: "-0.05em" }}>
-            JOURNEY // <span style={{ background: "linear-gradient(to right, #00f2fe, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>HISTORY</span>
+            JOURNEY // <span style={{ background: "linear-gradient(to right, #00f2fe, #fa541c, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>HISTORY</span>
           </h2>
 
           <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto", paddingLeft: "20px" }}>
+            {/* Timeline Vertical Line */}
             <div style={{ position: "absolute", left: "0", top: "8px", bottom: "8px", width: "2px", background: "linear-gradient(to bottom, #00f2fe 0%, #fa541c 50%, #9b51e0 100%)" }}></div>
 
+            {/* 1. Suvidha Foundation Internship */}
             <div style={{ position: "relative", marginBottom: "40px", paddingLeft: "20px" }}>
               <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#00f2fe", border: "2px solid #000" }}></div>
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
@@ -350,7 +489,7 @@ export default function Home() {
                     <span style={{ fontSize: "0.65rem", color: "#00f2fe", border: "1px solid rgba(0,242,254,0.3)", padding: "2px 6px", background: "rgba(0,242,254,0.05)", marginRight: "8px" }}>WORK</span>
                     <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "#fff", margin: 0 }}>MACHINE LEARNING INTERN</h3>
                   </div>
-                  <span style={{ fontSize: "0.75rem", color: "#555" }}>MARCH 2026 - PRESENT // REMOTE</span>
+                  <span style={{ fontSize: "0.75rem", color: "#555" }}>MARCH 2026 - MAY 2026 // REMOTE</span>
                 </div>
                 <h4 style={{ fontSize: "0.8rem", color: "var(--accent)", margin: "0 0 12px 0", fontWeight: "bold" }}>SUVIDHA FOUNDATION</h4>
                 <ul style={{ margin: "0 0 16px 0", paddingLeft: "16px", color: "var(--text-secondary)", fontSize: "0.8rem" }} className="space-y-2">
@@ -366,6 +505,32 @@ export default function Home() {
               </div>
             </div>
 
+            {/* 2. Microsoft Student Chapter */}
+            <div style={{ position: "relative", marginBottom: "40px", paddingLeft: "20px" }}>
+              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#fa541c", border: "2px solid #000" }}></div>
+              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed #222", paddingBottom: "6px", marginBottom: "12px" }}>
+                  <div>
+                    <span style={{ fontSize: "0.65rem", color: "#fa541c", border: "1px solid rgba(250,84,28,0.3)", padding: "2px 6px", background: "rgba(250,84,28,0.05)", marginRight: "8px" }}>LEADERSHIP</span>
+                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "#fff", margin: 0 }}>CORE TECHNICAL MEMBER</h3>
+                  </div>
+                  <span style={{ fontSize: "0.75rem", color: "#555" }}>AUG 2025 - PRESENT // BGIEM</span>
+                </div>
+                <h4 style={{ fontSize: "0.8rem", color: "var(--accent)", margin: "0 0 12px 0", fontWeight: "bold" }}>MICROSOFT STUDENT CHAPTER</h4>
+                <ul style={{ margin: "0 0 16px 0", paddingLeft: "16px", color: "var(--text-secondary)", fontSize: "0.8rem" }} className="space-y-2">
+                  <li>Leading the technical direction and executing developmental strategies for the campus chapter.</li>
+                  <li>Organizing and managing core technical events, workshops, and student engagements.</li>
+                  <li>Fostering collaborative problem-solving and software development within the student community.</li>
+                </ul>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {["Technical Leadership", "Teamwork", "Event Coordination", "Community Building"].map((tag) => (
+                    <span key={tag} style={{ fontSize: "0.65rem", color: "#666", border: "1px solid #222", padding: "2px 8px", background: "#050505" }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Education */}
             <div style={{ position: "relative", paddingLeft: "20px" }}>
               <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#9b51e0", border: "2px solid #000" }}></div>
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
@@ -374,7 +539,7 @@ export default function Home() {
                     <span style={{ fontSize: "0.65rem", color: "#9b51e0", border: "1px solid rgba(155,81,224,0.3)", padding: "2px 6px", background: "rgba(155,81,224,0.05)", marginRight: "8px" }}>EDUCATION</span>
                     <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "#fff", margin: 0 }}>B.TECH IN COMPUTER SCIENCE</h3>
                   </div>
-                  <span style={{ fontSize: "0.75rem", color: "#555" }}>2024 - PRESENT // JABALPUR</span>
+                  <span style={{ fontSize: "0.75rem", color: "#555" }}>2024 - OCT 2028 // JABALPUR</span>
                 </div>
                 <h4 style={{ fontSize: "0.8rem", color: "var(--accent)", margin: "0 0 12px 0", fontWeight: "bold" }}>BADERIA GLOBAL INSTITUTE OF ENGINEERING & MANAGEMENT</h4>
                 <ul style={{ margin: "0 0 16px 0", paddingLeft: "16px", color: "var(--text-secondary)", fontSize: "0.8rem" }} className="space-y-2">
@@ -389,6 +554,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
           </div>
         </section>
       </div>
