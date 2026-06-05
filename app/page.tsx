@@ -5,9 +5,21 @@ import { useEffect, useState } from "react"
 export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [uptime, setUptime] = useState(0)
-  const [showAllProjects, setShowAllProjects] = useState(false) // Added state for hidden projects
+  const [showAllProjects, setShowAllProjects] = useState(false)
+  const [visits, setVisits] = useState("---") // NEW: Visit counter state
 
   useEffect(() => {
+    // Global Visit Counter API Ping
+    fetch('https://api.counterapi.dev/v1/cyberdragon55k/portfolio_visits/up')
+      .then(res => res.json())
+      .then(data => {
+        // Pad the number with leading zeros for that retro look (e.g., 0042)
+        if (data && data.count) {
+          setVisits(data.count.toString().padStart(4, '0'));
+        }
+      })
+      .catch(err => console.error("Telemetry ping failed:", err));
+
     // Dynamic Session Uptime Counter
     const timer = setInterval(() => setUptime((prev) => prev + 1), 1000)
 
@@ -94,7 +106,7 @@ export default function Home() {
               ADITYA_NAMDEO //
             </h2>
 
-            <h1 style={{ textTransform: "uppercase" }}>
+            <h1 style={{ textTransform: "uppercase", fontSize: "clamp(2rem, 8vw, 3.5rem)", lineHeight: "1.1", marginTop: "8px", marginBottom: "16px" }}>
               DATA & ML <span>SYSTEMS</span> DEVELOPER
             </h1>
             <p style={{ fontSize: "1.2rem", lineHeight: "1.8", maxWidth: "600px", color: "var(--text-secondary)" }}>
@@ -104,7 +116,7 @@ export default function Home() {
             </p>
             
             {/* Front Page Action Controls & Social Nodes */}
-            <div style={{ display: "flex", alignItems: "center", flexDirection: "row", flexWrap: "nowrap", gap: "12px", marginTop: "32px", width: "100%" }}>
+            <div style={{ display: "flex", alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: "12px", marginTop: "32px", width: "100%" }}>
               <a 
                 href="#work" 
                 className="btn-retro" 
@@ -119,6 +131,7 @@ export default function Home() {
               <a 
                 href="/AdityaNamdeoResume.pdf" 
                 download="Aditya_Namdeo_Resume.pdf"
+                className="glitch-hover"
                 style={{ 
                   margin: 0, 
                   padding: "10px 20px",
@@ -129,18 +142,9 @@ export default function Home() {
                   fontSize: "0.8rem",
                   fontWeight: "bold",
                   textDecoration: "none",
-                  transition: "all 0.2s ease",
                   display: "inline-flex",
                   alignItems: "center",
                   whiteSpace: "nowrap"
-                }}
-                onMouseOver={(e) => { 
-                  e.currentTarget.style.transform = 'translate(-2px, -2px)'; 
-                  e.currentTarget.style.background = 'rgba(250, 84, 28, 0.05)'; 
-                }}
-                onMouseOut={(e) => { 
-                  e.currentTarget.style.transform = 'translate(0px, 0px)'; 
-                  e.currentTarget.style.background = 'transparent'; 
                 }}
               >
                 GET_RESUME.PDF
@@ -196,6 +200,11 @@ export default function Home() {
           <div className="stat-item">
             <div className="stat-val" style={{ color: "var(--accent)" }}><span className="tabular-nums">{formatUptime(uptime)}</span></div>
             <div className="stat-label">SESSION_UPTIME</div>
+          </div>
+          {/* NEW: 5th Stat Block for Global Visits */}
+          <div className="stat-item">
+            <div className="stat-val" style={{ color: "var(--accent)" }}>{visits}</div>
+            <div className="stat-label">PAGE_VIEWS</div>
           </div>
         </div>
 
@@ -415,7 +424,7 @@ export default function Home() {
               </div>
 
 
-              {/* PROJECT_DELTA: NEWSSUMM++ */}
+              {/* PROJECT_EPSILON: N8N AUTOMATION */}
               <div className="project-card">
                 <div className="project-overlay">
                   <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
@@ -669,7 +678,7 @@ export default function Home() {
                   <label style={{ fontSize: "0.7rem", color: "#666", textTransform: "uppercase" }}>PAYLOAD [MESSAGE]</label>
                   <textarea name="message" required rows={4} placeholder="Transmit data..." style={{ background: "#050505", border: "1px solid #333", padding: "10px", color: "#fff", fontSize: "0.8rem", fontFamily: "monospace", outline: "none", resize: "vertical" }}></textarea>
                 </div>
-                <button type="submit" style={{ background: "var(--accent)", color: "#000", border: "none", padding: "12px", fontSize: "0.8rem", fontWeight: "bold", textTransform: "uppercase", cursor: "pointer", marginTop: "8px" }}>
+                <button type="submit" className="glitch-hover" style={{ background: "var(--accent)", color: "#000", border: "none", padding: "12px", fontSize: "0.8rem", fontWeight: "bold", textTransform: "uppercase", marginTop: "8px" }}>
                   EXECUTE TRANSMISSION
                 </button>
               </form>
@@ -702,10 +711,34 @@ export default function Home() {
           </div>
 
           {/* Main Structural Signature Block (Color Injected) */}
-          <div style={{ border: "1px dashed var(--accent)", background: "rgba(250, 84, 28, 0.02)", width: "100%", maxWidth: "600px", padding: "32px 24px", position: "relative", textAlign: "center" }}>
+          <div style={{ border: "1px dashed var(--accent)", background: "rgba(250, 84, 28, 0.02)", width: "100%", maxWidth: "600px", padding: "32px 24px", position: "relative", textAlign: "center", overflow: "hidden" }}>
             {/* Corner Tech Anchors */}
             <div style={{ position: "absolute", top: "-1px", left: "-1px", width: "12px", height: "12px", borderTop: "2px solid #fff", borderLeft: "2px solid #fff" }}></div>
             <div style={{ position: "absolute", bottom: "-1px", right: "-1px", width: "12px", height: "12px", borderBottom: "2px solid #fff", borderRight: "2px solid #fff" }}></div>
+            
+            {/* NEW: ASCII ART LOGO */}
+            <pre style={{
+              fontFamily: "monospace",
+              fontSize: "clamp(0.3rem, 1vw, 0.6rem)", 
+              color: "var(--text-secondary)",
+              lineHeight: "1.1",
+              textAlign: "left", /* Changed from center to left for proper mobile scrolling */
+              marginBottom: "24px",
+              marginTop: "8px",
+              fontWeight: "bold",
+              textShadow: "0px 0px 4px rgba(255,255,255,0.2)",
+              whiteSpace: "pre",
+              maxWidth: "100%",     /* FORCES it to stay inside the dashed border */
+              overflowX: "auto",    /* CREATES a horizontal swipe/scroll area on mobile */
+              paddingBottom: "10px" /* Gives the scrollbar a little breathing room */
+            }}>
+{` █████╗ ██████╗ ██╗████████╗██╗   ██╗ █████╗     ███╗   ██╗ █████╗ ███╗   ███╗██████╗ ███████╗ ██████╗ 
+██╔══██╗██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝██╔══██╗    ████╗  ██║██╔══██╗████╗ ████║██╔══██╗██╔════╝██╔═══██╗
+███████║██║  ██║██║   ██║    ╚████╔╝ ███████║    ██╔██╗ ██║███████║██╔████╔██║██║  ██║█████╗  ██║   ██║
+██╔══██║██║  ██║██║   ██║     ╚██╔╝  ██╔══██║    ██║╚██╗██║██╔══██║██║╚██╔╝██║██║  ██║██╔══╝  ██║   ██║
+██║  ██║██████╔╝██║   ██║      ██║   ██║  ██║    ██║ ╚████║██║  ██║██║ ╚═╝ ██║██████╔╝███████╗╚██████╔╝
+╚═╝  ╚═╝╚═════╝ ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝    ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚═╝╚═════╝ ╚══════╝ ╚═════╝ `}
+            </pre>
             
             <p style={{ color: "var(--accent)", fontSize: "0.65rem", margin: "0 0 8px 0", letterSpacing: "4px", textTransform: "uppercase", fontWeight: "bold" }}>
               [SYSTEM_SHUTDOWN // 2026]

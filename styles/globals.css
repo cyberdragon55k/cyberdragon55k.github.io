@@ -963,3 +963,24 @@ footer {
     font-size: 1.5rem;
   }
 }
+/* --- SYSTEM GLITCH ANIMATION --- */
+.glitch-hover {
+  position: relative;
+  transition: all 0.1s ease;
+}
+
+.glitch-hover:hover {
+  animation: text-glitch 0.2s linear infinite;
+  background: rgba(250, 84, 28, 0.1) !important;
+  color: #fff !important;
+  cursor: crosshair;
+}
+
+@keyframes text-glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); color: #ff4d4d; text-shadow: 2px 0px 0px cyan; }
+  40% { transform: translate(-1px, -1px); color: #fff; text-shadow: none; }
+  60% { transform: translate(2px, 1px); color: cyan; text-shadow: -2px 0px 0px #ff4d4d; }
+  80% { transform: translate(1px, -1px); color: #fff; text-shadow: none; }
+  100% { transform: translate(0); }
+}
