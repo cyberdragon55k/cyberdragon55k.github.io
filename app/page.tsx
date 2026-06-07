@@ -6,14 +6,33 @@ export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [uptime, setUptime] = useState(0)
   const [showAllProjects, setShowAllProjects] = useState(false)
-  const [visits, setVisits] = useState("---") // NEW: Visit counter state
+  const [visits, setVisits] = useState("---") 
+
+  const [terminalInput, setTerminalInput] = useState("")
+  
+  // Set initial history to auto-run the skills and contact scripts!
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([
+    "guest@system:~$ fetch skills --all",
+    "> Analyzing system core competencies...",
+    "[██████████████████░░] ADVANCED     - PYTHON & DEEP LEARNING (TENSORFLOW, PYTORCH)",
+    "[████████████████░░░░] PROFICIENT   - DATA PIPELINES & ENGINEERING (PANDAS, NUMPY, SCIKIT-LEARN)",
+    "[████████████░░░░░░░░] INTERMEDIATE - DATA STRUCTURES & ALGORITHMS (C++ / OOP)",
+    "[██████████░░░░░░░░░░] INTERMEDIATE - DATA RELATIONS & ARCHITECTURES (SQL / MYSQL)",
+    "[██████████░░░░░░░░░░] INTERMEDIATE - WORKFLOW PIPELINE AUTOMATION (n8n, GIT)",
+    "[████░░░░░░░░░░░░░░░░] FAMILIAR     - ANDROID DEV (KOTLIN)",
+    "[████████████████░░░░] PROFICIENT   - TECHNICAL ORCHESTRATION (TEAM MANAGEMENT)",
+    " ",
+    "guest@system:~$ run contact_protocol.sh",
+    "> Establishing secure peer-to-peer data tunnel connection... _",
+    " ",
+    "Type 'help' to view available commands, or 'whoami' for system admin details."
+  ])
 
   useEffect(() => {
     // Global Visit Counter API Ping
     fetch('https://api.counterapi.dev/v1/cyberdragon55k/portfolio_visits/up')
       .then(res => res.json())
       .then(data => {
-        // Pad the number with leading zeros for that retro look (e.g., 0042)
         if (data && data.count) {
           setVisits(data.count.toString().padStart(4, '0'));
         }
@@ -68,6 +87,99 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+  // MASSIVELY EXPANDED TERMINAL COMMANDS
+  const handleTerminalSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const cmd = terminalInput.trim().toLowerCase()
+    if (!cmd) return
+
+    let response: string[] = []
+
+    switch (cmd) {
+      case "help":
+        response = [
+          "AVAILABLE SECURE PROTOCOLS:",
+          "  whoami             - Display system administrator identity.",
+          "  skills             - Execute core competency readout.",
+          "  resume             - Locate admin resume protocol.",
+          "  projects           - Fetch deployment architecture list.",
+          "  contact            - View secure endpoint tunnels.",
+          "  fetch hardware     - Read deployment node metrics.",
+          "  fetch offline_logs - Analyze administrative discipline matrices.",
+          "  clear              - Wipe console terminal history cache."
+        ]
+        break
+      case "whoami":
+        response = [
+          "Aditya Namdeo",
+          "Data & ML Systems Developer",
+          "B.Tech CSE @ BGIEM",
+          "Jabalpur, Madhya Pradesh, IN"
+        ]
+        break
+      case "skills":
+        response = [
+          "> Analyzing system core competencies...",
+          "[██████████████████░░] ADVANCED     - PYTHON & DEEP LEARNING",
+          "[████████████████░░░░] PROFICIENT   - DATA PIPELINES & ENGINEERING",
+          "[████████████░░░░░░░░] INTERMEDIATE - C++ / OOP & SQL",
+          "[██████████░░░░░░░░░░] INTERMEDIATE - n8n & GIT AUTOMATION",
+          "[████████████████░░░░] PROFICIENT   - TECHNICAL ORCHESTRATION"
+        ]
+        break
+      case "resume":
+        response = [
+          "> Locating administrator resume...",
+          "  File located successfully.",
+          "  Please click [ GET_RESUME.PDF ] in the main header to initiate transfer."
+        ]
+        break
+      case "projects":
+        response = [
+          "> Querying deployment logs...",
+          "  [01] AVI_ENGINE        - Computer Vision & Generative AI",
+          "  [02] VALUATION_ENGINE  - ML Regression Price Predictor",
+          "  [03] RECOMMENDER       - Content-Based NLP System",
+          "  [04] NEWSSUMM++        - Data Engineering & NLP",
+          "  [05] AUTOMATION        - n8n Architecture on Raspberry Pi",
+          "  Scroll to [ SEC_02 ] for full visual interfaces."
+        ]
+        break
+      case "contact":
+        response = [
+          "> Opening comms port...",
+          "  [@] aditya5namdeo@gmail.com",
+          "  [LOC] Jabalpur, Madhya Pradesh, IN",
+          "  Status: OPEN for collaborations. Use SEC_05 to transmit payload."
+        ]
+        break
+      case "fetch hardware":
+        response = [
+          "> Querying physical telemetry points...",
+          "  [NODE_01] Raspberry Pi 3 Server Node Cluster // STATUS: ACTIVE",
+          "  [NODE_02] Dell G15 Local Infrastructure Host  // STATUS: OPTIMAL",
+          "  [n8n_ENV] Pipeline Server Worker Processes   // STATUS: LISTENING"
+        ]
+        break
+      case "fetch offline_logs":
+        response = [
+          "> Opening real-world telemetry channels...",
+          "  [TRACK_01] Heavy progressive overload hypertrophic regimen running standard splits.",
+          "  [TRACK_02] Garage maintenance logs: Custom matte upkeep for Classic 350 'Black Panther'."
+        ]
+        break
+      case "clear":
+        setTerminalHistory([])
+        setTerminalInput("")
+        return
+      default:
+        response = [`ERROR: Command '${cmd}' unrecognized by mainframe core security layer.`]
+    }
+
+    setTerminalHistory(prev => [...prev, `guest@system:~$ ${terminalInput}`, ...response])
+    setTerminalInput("")
+  }
+
   return (
     <>
       {showScrollTop && (
@@ -79,8 +191,12 @@ export default function Home() {
       {/* Header Section (Mobile Optimized) */}
       <header>
         <div className="container" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "16px", padding: "16px 0" }}>
-          <div className="logo" style={{ fontSize: "1.2rem", fontWeight: "bold", whiteSpace: "nowrap" }}>
-            System.Ref
+          <div 
+            className="logo glitch-hover" 
+            onClick={scrollToTop}
+            style={{ fontSize: "1.2rem", fontWeight: "bold", whiteSpace: "nowrap", cursor: "pointer", textTransform: "uppercase" }}
+          >
+            SYSTEM.REF
           </div>
           <nav className="nav-links" style={{ display: "flex", flexWrap: "wrap", gap: "16px", justifyContent: "center", fontSize: "0.75rem" }}>
             <a href="#about">ABOUT ME</a>
@@ -101,7 +217,6 @@ export default function Home() {
           <div className="hero-content">
             <p style={{ color: "var(--accent)", marginBottom: "10px" }}>{"[ INITIALIZING PROTOCOL... ]"}</p>
             
-            {/* Added Identity Node Here */}
             <h2 style={{ fontSize: "1.2rem", color: "var(--text-secondary)", marginBottom: "8px", fontFamily: "monospace", letterSpacing: "2px" }}>
               ADITYA_NAMDEO //
             </h2>
@@ -127,7 +242,7 @@ export default function Home() {
                 EXPLORE FILES
               </a>
 
-              {/* NEW RESUME PROTOCOL DOWNLOAD BUTTON */}
+              {/* RESUME BUTTON WITH GLITCH EFFECT */}
               <a 
                 href="/AdityaNamdeoResume.pdf" 
                 download="Aditya_Namdeo_Resume.pdf"
@@ -151,14 +266,31 @@ export default function Home() {
               </a>
 
               <div style={{ display: "flex", gap: "12px" }}>
+                {/* GitHub */}
                 <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
                 </a>
+                
+                {/* LinkedIn */}
                 <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                 </a>
+                
+                {/* Twitter / X */}
                 <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+                </a>
+
+                {/* Kaggle */}
+                <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.633c0-.233.118-.35.354-.35h2.431c.234 0 .351.117.351.35v15.112l5.882-5.597c.14-.14.304-.21.492-.21h3.326c.188 0 .282.046.282.14 0 .047-.024.094-.07.141l-5.342 5.064 6.018 7.962c.046.046.07.093.07.14z"/></svg>
+                </a>
+
+                {/* Hugging Face */}
+                <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fontSize="13" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="monospace">HF</text>
+                  </svg>
                 </a>
               </div>
             </div>
@@ -201,7 +333,6 @@ export default function Home() {
             <div className="stat-val" style={{ color: "var(--accent)" }}><span className="tabular-nums">{formatUptime(uptime)}</span></div>
             <div className="stat-label">SESSION_UPTIME</div>
           </div>
-          {/* NEW: 5th Stat Block for Global Visits */}
           <div className="stat-item">
             <div className="stat-val" style={{ color: "var(--accent)" }}>{visits}</div>
             <div className="stat-label">PAGE_VIEWS</div>
@@ -215,7 +346,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "32px", alignItems: "start" }}>
-            {/* Narrative Summary */}
             <div style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: "1.6" }}>
               <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", marginBottom: "16px", letterSpacing: "-0.05em" }}>
                 $ WHO <span style={{ background: "linear-gradient(to right, #00f2fe, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AM I</span>
@@ -229,9 +359,30 @@ export default function Home() {
               <p style={{ color: "#666", fontSize: "0.75rem", borderLeft: "2px solid #222", paddingLeft: "12px", fontStyle: "italic" }}>
                 "When I'm not compiling predictive models in Python, you'll find me engineering backend microservices in Kotlin, orchestrating automated workflow node sequences via n8n, or analyzing runtime script bottlenecks."
               </p>
+
+              {/* NEW ACHIEVEMENT CONSOLE MODULE */}
+              <div style={{ border: "1px dashed var(--accent)", background: "rgba(250, 84, 28, 0.03)", padding: "20px", marginTop: "24px" }}>
+                <h3 style={{ fontSize: "0.8rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 16px 0", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  ACHIEVEMENTS.LOG
+                </h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontFamily: "monospace", fontSize: "0.85rem", color: "#e4e4e7" }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> ML Intern @ Suvidha Foundation
+                  </div>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> HPAIR 2026 Delegate
+                  </div>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> Core Technical Member
+                  </div>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> Advanced Data Cleaning & Pruning
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Core Capability Pillars */}
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "16px" }}>
                 <h3 style={{ fontSize: "0.75rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>
@@ -268,15 +419,12 @@ export default function Home() {
             
             {/* PROJECT_ALPHA CARD */}
             <div className="project-card">
-              
-              {/* ======================================================= */}
-              {/* ⚠️ TEMPORARY UNDER CONSTRUCTION OVERLAY - DELETE WHEN FINISHED ⚠️ */}
               <div style={{
                 position: "absolute",
                 inset: 0,
                 backgroundColor: "rgba(0, 0, 0, 0.85)",
                 backdropFilter: "blur(3px)",
-                zIndex: 30, // High enough to block the hover overlay
+                zIndex: 30, 
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -299,7 +447,6 @@ export default function Home() {
                   <span className="cursor-blink">_</span> Deployment pending
                 </p>
               </div>
-              {/* ======================================================= */}
 
               <div className="project-overlay">
                 <a href="https://github.com/cyberdragon55k/Avi" className="overlay-link" target="_blank" rel="noopener noreferrer">
@@ -332,7 +479,6 @@ export default function Home() {
 
             {/* PROJECT_BETA CARD */}
             <div className="project-card">
-              {/* Added Overlay Layer Here */}
               <div className="project-overlay">
                 <a href="https://github.com/cyberdragon55k/Used-Bike-Price-Predictor" className="overlay-link" target="_blank" rel="noopener noreferrer">
                   GITHUB
@@ -362,7 +508,6 @@ export default function Home() {
 
             {/* PROJECT_GAMMA CARD */}
             <div className="project-card">
-              {/* Added Overlay Layer Here */}
               <div className="project-overlay">
                 <a href="https://github.com/cyberdragon55k/movie_recommender_system" className="overlay-link" target="_blank" rel="noopener noreferrer">
                   GITHUB
@@ -442,7 +587,6 @@ export default function Home() {
                     <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
                   </div>
                 </div>
-                {/* Remember to add an n8n-image.jpg to your public folder */}
                 <img src="/n8n-image.jpg" alt="Automation Architecture" className="project-img" />
                 <div className="project-info">
                   <span className="project-tag">#SYSTEMS #RASPBERRY_PI</span>
@@ -456,7 +600,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* LOAD MORE BUTTON CONTROLLER */}
           <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", width: "100%" }}>
             <button 
               onClick={() => setShowAllProjects(!showAllProjects)} 
@@ -474,7 +617,6 @@ export default function Home() {
           </div>
         </section>
         
-
         {/* SEC_03: Experience & Education Vertical Stack Tracker */}
         <section id="experience" style={{ scrollMarginTop: "80px", marginTop: "80px", marginBottom: "80px" }} className="font-mono">
           <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid #222", paddingBottom: "8px", marginBottom: "40px" }}>
@@ -486,10 +628,8 @@ export default function Home() {
           </h2>
 
           <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto", paddingLeft: "20px" }}>
-            {/* Timeline Vertical Line */}
             <div style={{ position: "absolute", left: "0", top: "8px", bottom: "8px", width: "2px", background: "linear-gradient(to bottom, #00f2fe 0%, #fa541c 50%, #9b51e0 100%)" }}></div>
 
-            {/* 1. Suvidha Foundation Internship */}
             <div style={{ position: "relative", marginBottom: "40px", paddingLeft: "20px" }}>
               <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#00f2fe", border: "2px solid #000" }}></div>
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
@@ -514,7 +654,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 2. Microsoft Student Chapter */}
             <div style={{ position: "relative", marginBottom: "40px", paddingLeft: "20px" }}>
               <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#fa541c", border: "2px solid #000" }}></div>
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
@@ -539,7 +678,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 3. Education */}
             <div style={{ position: "relative", paddingLeft: "20px" }}>
               <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#9b51e0", border: "2px solid #000" }}></div>
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
@@ -570,62 +708,69 @@ export default function Home() {
 
       {/* Marquee */}
       <div className="marquee-container">
-        <div className="marquee-text">
-          <span>DATA ENGINE SYSTEMS • </span>
-          <span>MACHINE LEARNING OPERATIONS • </span>
-          <span>BUILDING CORES • </span>
-          <span>RETRO STYLING MODERN TECH • </span>
-          <span>DATA ENGINE SYSTEMS • </span>
-          <span>MACHINE LEARNING OPERATIONS • </span>
-          <span>BUILDING CORES • </span>
-          <span>RETRO STYLING MODERN TECH • </span>
+        <div className="marquee-text" style={{ fontFamily: "monospace", letterSpacing: "2px" }}>
+          <span>DEEP LEARNING ARCHITECTURES • </span>
+          <span>DATA PIPELINE ENGINEERING • </span>
+          <span>C++ ALGORITHMIC OPTIMIZATION • </span>
+          <span>AUTOMATION & CI/CD • </span>
+          <span>DEEP LEARNING ARCHITECTURES • </span>
+          <span>DATA PIPELINE ENGINEERING • </span>
+          <span>C++ ALGORITHMIC OPTIMIZATION • </span>
+          <span>AUTOMATION & CI/CD • </span>
         </div>
       </div>
 
       <div className="container">
-        {/* SEC_04: Terminal Section */}
+        {/* SEC_04: Interactive Terminal Console Section */}
         <section className="terminal-section" id="lab" style={{ scrollMarginTop: "80px" }}>
           <div className="terminal-header">SYSTEM_CONSOLE.EXE</div>
-          <div className="terminal-row">
-            <span className="prompt">{"guest@system:~$"}</span>
-            <span className="command">fetch skills --all</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"> Analyzing system core competencies..."}</span>
-          </div>
           
-          <div className="terminal-row">
-            <span className="output">{"[████████████████████] 100% - PYTHON & DEEP LEARNING (TENSORFLOW, PYTORCH)"}</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"[███████████████████░] 95%  - DATA PIPELINES & ENGINEERING (PANDAS, NUMPY, SCIKIT-LEARN)"}</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"[██████████████░░░░░░] 70%  - DATA STRUCTURES & ALGORITHMS (C++ / OOP)"}</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"[████████████░░░░░░░░] 60%  - DATA RELATIONS & ARCHITECTURES (SQL / MYSQL)"}</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"[████████████░░░░░░░░] 60%  - WORKFLOW PIPELINE AUTOMATION (n8n, GIT)"}</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"[████░░░░░░░░░░░░░░░░] 20%  - ANDROID DEV (KOTLIN)"}</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">{"[██████████████████░░] 90%  - TECHNICAL ORCHESTRATION (TEAM MANAGEMENT, EVENT COORDINATION)"}</span>
+          {/* Increased maxHeight to 500px and added output indent styling */}
+          <div style={{ 
+            display: "flex", 
+            flexDirection: "column", 
+            gap: "6px", 
+            maxHeight: "500px", 
+            overflowY: "auto", 
+            marginBottom: "12px", 
+            paddingRight: "4px" 
+          }}>
+            {terminalHistory.map((line, idx) => (
+              <div key={idx} className="terminal-row" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: "1.4" }}>
+                {line.startsWith("guest@system:~$") ? (
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <span className="prompt" style={{ color: "var(--accent)", fontWeight: "bold" }}>guest@system:~$</span>
+                    <span className="command" style={{ color: "#fff" }}>{line.replace("guest@system:~$", "")}</span>
+                  </div>
+                ) : (
+                  <span className="output" style={{ color: "#a1a1aa", paddingLeft: "15px", display: "block" }}>
+                    {line}
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
 
-          <div className="terminal-row">
-            <span className="prompt">{"guest@system:~$"}</span>
-            <span className="command">run contact_protocol.sh</span>
-          </div>
-          <div className="terminal-row">
-            <span className="output">
-              {"> Establishing secure peer-to-peer data tunnel connection... "}
-              <span className="cursor-blink">_</span>
-            </span>
-          </div>
+          {/* Interactive Shell Input Field */}
+          <form onSubmit={handleTerminalSubmit} style={{ display: "flex", alignItems: "center", width: "100%" }}>
+            <span className="prompt" style={{ whiteSpace: "nowrap", marginRight: "8px" }}>guest@system:~$</span>
+            <input 
+              type="text" 
+              value={terminalInput}
+              onChange={(e) => setTerminalInput(e.target.value)}
+              placeholder="Enter system flag..."
+              style={{
+                flex: 1,
+                background: "transparent",
+                border: "none",
+                outline: "none",
+                color: "var(--accent)",
+                fontFamily: "monospace",
+                fontSize: "0.85rem",
+                caretColor: "var(--accent)"
+              }}
+            />
+          </form>
         </section>
 
         {/* SEC_05: The Communication Port (Contact Form) */}
@@ -636,8 +781,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-5 space-y-6">
-              <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", letterSpacing: "-0.05em", marginBottom: "16px" }}>
-                INITIATE <span style={{ background: "linear-gradient(to right, #00f2fe, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>PING</span>
+              <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", letterSpacing: "-0.05em", marginBottom: "16px", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+                <span>INITIATE <span style={{ background: "linear-gradient(to right, #00f2fe, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>PING</span></span>
+                <span style={{ fontSize: "0.8rem", color: "#666", fontWeight: "normal", letterSpacing: "2px", borderLeft: "2px solid #333", paddingLeft: "12px" }}>[ CONTACT_ME ]</span>
               </h2>
               <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", lineHeight: "1.6" }}>
                 Have a complex dataset to prune, an algorithmic structure to optimize, or just want to chat about AI? Open a secure channel.
@@ -646,11 +792,17 @@ export default function Home() {
               <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
                 <h3 style={{ fontSize: "0.75rem", color: "#fff", textTransform: "uppercase", fontWeight: "bold", marginBottom: "16px" }}>// SECURE_ENDPOINTS</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "0.8rem", color: "#a1a1aa" }}>
+                  
+                  {/* HIDDEN MAILTO BUTTON REPLACEMENT */}
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <span style={{ color: "var(--accent)" }}>[@]</span> <span>aditya5namdeo@gmail.com</span>
+                    <span style={{ color: "var(--accent)" }}>[MAIL]</span> 
+                    <a href="mailto:aditya5namdeo@gmail.com" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", borderBottom: "1px dashed var(--accent)" }}>
+                      [ DECRYPT_MAILTO ]
+                    </a>
                   </div>
+                  
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <span style={{ color: "var(--accent)" }}>[LOC]</span> <span>Jabalpur, Madhya Pradesh, IN</span>
+                    <span style={{ color: "var(--accent)" }}>[LOC ]</span> <span>Jabalpur, Madhya Pradesh, IN</span>
                   </div>
                 </div>
               </div>
@@ -678,7 +830,7 @@ export default function Home() {
                   <label style={{ fontSize: "0.7rem", color: "#666", textTransform: "uppercase" }}>PAYLOAD [MESSAGE]</label>
                   <textarea name="message" required rows={4} placeholder="Transmit data..." style={{ background: "#050505", border: "1px solid #333", padding: "10px", color: "#fff", fontSize: "0.8rem", fontFamily: "monospace", outline: "none", resize: "vertical" }}></textarea>
                 </div>
-                <button type="submit" className="glitch-hover" style={{ background: "var(--accent)", color: "#000", border: "none", padding: "12px", fontSize: "0.8rem", fontWeight: "bold", textTransform: "uppercase", marginTop: "8px" }}>
+                <button type="submit" className="glitch-hover" style={{ background: "var(--accent)", color: "#000", border: "none", padding: "12px", fontSize: "0.8rem", fontWeight: "bold", textTransform: "uppercase", cursor: "pointer", marginTop: "8px" }}>
                   EXECUTE TRANSMISSION
                 </button>
               </form>
@@ -689,48 +841,47 @@ export default function Home() {
         {/* The Upgraded Brutalist Telemetry Footer Section */}
         <footer style={{ borderTop: "2px solid var(--accent)", marginTop: "80px", paddingTop: "50px", paddingBottom: "50px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }} className="font-mono">
           
-          {/* Link Routing Table Module */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: "600px" }}>
             <div style={{ fontSize: "0.65rem", color: "var(--accent)", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "10px", width: "100%", textAlign: "left", borderLeft: "2px solid var(--accent)", paddingLeft: "8px" }}>
               // LINK_ROUTING_TABLE
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "10px", width: "100%" }}>
-              <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(250, 84, 28, 0.05)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#050505'; }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+              <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
                 [ GITHUB ]
               </a>
-              <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(250, 84, 28, 0.05)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#050505'; }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+              <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
                 [ LINKEDIN ]
               </a>
-              <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'rgba(250, 84, 28, 0.05)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#050505'; }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+              <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
                 [ TWITTER ]
+              </a>
+              <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
+                [ KAGGLE ]
+              </a>
+              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
+                [ HUGGINGFACE ]
               </a>
             </div>
           </div>
 
-          {/* Main Structural Signature Block (Color Injected) */}
           <div style={{ border: "1px dashed var(--accent)", background: "rgba(250, 84, 28, 0.02)", width: "100%", maxWidth: "600px", padding: "32px 24px", position: "relative", textAlign: "center", overflow: "hidden" }}>
-            {/* Corner Tech Anchors */}
             <div style={{ position: "absolute", top: "-1px", left: "-1px", width: "12px", height: "12px", borderTop: "2px solid #fff", borderLeft: "2px solid #fff" }}></div>
             <div style={{ position: "absolute", bottom: "-1px", right: "-1px", width: "12px", height: "12px", borderBottom: "2px solid #fff", borderRight: "2px solid #fff" }}></div>
             
-            {/* NEW: ASCII ART LOGO */}
             <pre style={{
               fontFamily: "monospace",
               fontSize: "clamp(0.3rem, 1vw, 0.6rem)", 
               color: "var(--text-secondary)",
               lineHeight: "1.1",
-              textAlign: "left", /* Changed from center to left for proper mobile scrolling */
+              textAlign: "left",
               marginBottom: "24px",
               marginTop: "8px",
               fontWeight: "bold",
               textShadow: "0px 0px 4px rgba(255,255,255,0.2)",
               whiteSpace: "pre",
-              maxWidth: "100%",     /* FORCES it to stay inside the dashed border */
-              overflowX: "auto",    /* CREATES a horizontal swipe/scroll area on mobile */
-              paddingBottom: "10px" /* Gives the scrollbar a little breathing room */
+              maxWidth: "100%",
+              overflowX: "auto",
+              paddingBottom: "10px"
             }}>
 {` █████╗ ██████╗ ██╗████████╗██╗   ██╗ █████╗     ███╗   ██╗ █████╗ ███╗   ███╗██████╗ ███████╗ ██████╗ 
 ██╔══██╗██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝██╔══██╗    ████╗  ██║██╔══██╗████╗ ████║██╔══██╗██╔════╝██╔═══██╗
@@ -757,7 +908,6 @@ export default function Home() {
 
         </footer>
 
-        {/* Option 1: The Powerline Status Ribbon */}
         <div className="footer-badge" style={{ position: "relative", zIndex: 10, paddingBottom: "24px", textAlign: "center", width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ background: "var(--accent)", color: "#000", display: "inline-flex", alignItems: "center", fontSize: "0.65rem", fontFamily: "monospace", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
             <span style={{ background: "rgba(0, 0, 0, 0.12)", padding: "6px 12px" }}>SYS_ADMIN // A.NAMDEO</span>
