@@ -1,15 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [uptime, setUptime] = useState(0)
   const [showAllProjects, setShowAllProjects] = useState(false)
-  const [visits, setVisits] = useState("---") 
-
+  const [visits, setVisits] = useState("---")
   const [terminalInput, setTerminalInput] = useState("")
-  
+
+  // NEW: Theme & Form State
+  const [isLightMode, setIsLightMode] = useState(false)
+  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
+
+  // --- TERMINAL FIX REFS ---
+  const terminalContainerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
   // Set initial history to auto-run the skills and contact scripts!
   const [terminalHistory, setTerminalHistory] = useState<string[]>([
     "guest@system:~$ fetch skills --all",
@@ -28,8 +35,24 @@ export default function Home() {
     "Type 'help' to view available commands, or 'whoami' for system admin details."
   ])
 
+  // --- TERMINAL AUTO-SCROLL EFFECT ---
   useEffect(() => {
-    // Global Visit Counter API Ping
+  if (terminalContainerRef.current) {
+    // This forces ONLY the specific container to scroll down
+    terminalContainerRef.current.scrollTop = terminalContainerRef.current.scrollHeight;
+  }
+}, [terminalHistory])
+
+  // Apply Theme to Body
+  useEffect(() => {
+    if (isLightMode) {
+      document.body.classList.add("light-mode")
+    } else {
+      document.body.classList.remove("light-mode")
+    }
+  }, [isLightMode])
+
+  useEffect(() => {
     fetch('https://api.counterapi.dev/v1/cyberdragon55k/portfolio_visits/up')
       .then(res => res.json())
       .then(data => {
@@ -39,18 +62,11 @@ export default function Home() {
       })
       .catch(err => console.error("Telemetry ping failed:", err));
 
-    // Dynamic Session Uptime Counter
     const timer = setInterval(() => setUptime((prev) => prev + 1), 1000)
 
-    // Update the system clock and metrics bar dynamically
     function updateClock() {
       const now = new Date()
-      const timeStr =
-        now.getHours().toString().padStart(2, "0") +
-        ":" +
-        now.getMinutes().toString().padStart(2, "0") +
-        ":" +
-        now.getSeconds().toString().padStart(2, "0")
+      const timeStr = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0") + ":" + now.getSeconds().toString().padStart(2, "0")
       const statusElement = document.querySelector(".system-status")
       if (statusElement) {
         statusElement.textContent = `SYS_UP: ${timeStr} | CPU: ${Math.floor(Math.random() * 20) + 5}%`
@@ -60,15 +76,10 @@ export default function Home() {
     const clockInterval = setInterval(updateClock, 1000)
 
     const handleScroll = () => {
-      if (window.scrollY > 500) {
-        setShowScrollTop(true)
-      } else {
-        setShowScrollTop(false)
-      }
+      setShowScrollTop(window.scrollY > 500)
     }
 
     window.addEventListener("scroll", handleScroll)
-
     return () => {
       clearInterval(timer)
       clearInterval(clockInterval)
@@ -87,97 +98,57 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  // MASSIVELY EXPANDED TERMINAL COMMANDS
   const handleTerminalSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const cmd = terminalInput.trim().toLowerCase()
     if (!cmd) return
 
     let response: string[] = []
-
     switch (cmd) {
-      case "help":
-        response = [
-          "AVAILABLE SECURE PROTOCOLS:",
-          "  whoami             - Display system administrator identity.",
-          "  skills             - Execute core competency readout.",
-          "  resume             - Locate admin resume protocol.",
-          "  projects           - Fetch deployment architecture list.",
-          "  contact            - View secure endpoint tunnels.",
-          "  fetch hardware     - Read deployment node metrics.",
-          "  fetch offline_logs - Analyze administrative discipline matrices.",
-          "  clear              - Wipe console terminal history cache."
-        ]
-        break
-      case "whoami":
-        response = [
-          "Aditya Namdeo",
-          "Data & ML Systems Developer",
-          "B.Tech CSE @ BGIEM",
-          "Jabalpur, Madhya Pradesh, IN"
-        ]
-        break
-      case "skills":
-        response = [
-          "> Analyzing system core competencies...",
-          "[██████████████████░░] ADVANCED     - PYTHON & DEEP LEARNING",
-          "[████████████████░░░░] PROFICIENT   - DATA PIPELINES & ENGINEERING",
-          "[████████████░░░░░░░░] INTERMEDIATE - C++ / OOP & SQL",
-          "[██████████░░░░░░░░░░] INTERMEDIATE - n8n & GIT AUTOMATION",
-          "[████████████████░░░░] PROFICIENT   - TECHNICAL ORCHESTRATION"
-        ]
-        break
-      case "resume":
-        response = [
-          "> Locating administrator resume...",
-          "  File located successfully.",
-          "  Please click [ GET_RESUME.PDF ] in the main header to initiate transfer."
-        ]
-        break
-      case "projects":
-        response = [
-          "> Querying deployment logs...",
-          "  [01] AVI_ENGINE        - Computer Vision & Generative AI",
-          "  [02] VALUATION_ENGINE  - ML Regression Price Predictor",
-          "  [03] RECOMMENDER       - Content-Based NLP System",
-          "  [04] NEWSSUMM++        - Data Engineering & NLP",
-          "  [05] AUTOMATION        - n8n Architecture on Raspberry Pi",
-          "  Scroll to [ SEC_02 ] for full visual interfaces."
-        ]
-        break
-      case "contact":
-        response = [
-          "> Opening comms port...",
-          "  [@] aditya5namdeo@gmail.com",
-          "  [LOC] Jabalpur, Madhya Pradesh, IN",
-          "  Status: OPEN for collaborations. Use SEC_05 to transmit payload."
-        ]
-        break
-      case "fetch hardware":
-        response = [
-          "> Querying physical telemetry points...",
-          "  [NODE_01] Raspberry Pi 3 Server Node Cluster // STATUS: ACTIVE",
-          "  [NODE_02] Dell G15 Local Infrastructure Host  // STATUS: OPTIMAL",
-          "  [n8n_ENV] Pipeline Server Worker Processes   // STATUS: LISTENING"
-        ]
-        break
-      case "fetch offline_logs":
-        response = [
-          "> Opening real-world telemetry channels...",
-          "  [TRACK_01] Heavy progressive overload hypertrophic regimen running standard splits.",
-          "  [TRACK_02] Garage maintenance logs: Custom matte upkeep for Classic 350 'Black Panther'."
-        ]
-        break
-      case "clear":
-        setTerminalHistory([])
-        setTerminalInput("")
-        return
-      default:
-        response = [`ERROR: Command '${cmd}' unrecognized by mainframe core security layer.`]
+      case "help": response = ["AVAILABLE SECURE PROTOCOLS:", "  whoami             - Display system administrator identity.", "  skills             - Execute core competency readout.", "  resume             - Locate admin resume protocol.", "  projects           - Fetch deployment architecture list.", "  contact            - View secure endpoint tunnels.", "  fetch hardware     - Read deployment node metrics.", "  fetch offline_logs - Analyze administrative discipline matrices.", "  clear              - Wipe console terminal history cache."]; break
+      case "whoami": response = ["Aditya Namdeo", "Data & ML Systems Developer", "B.Tech CSE @ BGIEM", "Jabalpur, Madhya Pradesh, IN"]; break
+      case "skills": response = ["> Analyzing system core competencies...", "[██████████████████░░] ADVANCED     - PYTHON & DEEP LEARNING", "[████████████████░░░░] PROFICIENT   - DATA PIPELINES & ENGINEERING", "[████████████░░░░░░░░] INTERMEDIATE - C++ / OOP & SQL", "[██████████░░░░░░░░░░] INTERMEDIATE - n8n & GIT AUTOMATION", "[████████████████░░░░] PROFICIENT   - TECHNICAL ORCHESTRATION"]; break
+      case "resume": response = ["> Locating administrator resume...", "  File located successfully.", "  Please click [ GET_RESUME.PDF ] in the main header to initiate transfer."]; break
+      case "projects": response = ["> Querying deployment logs...", "  [01] AVI_ENGINE        - Computer Vision & Generative AI", "  [02] VALUATION_ENGINE  - ML Regression Price Predictor", "  [03] RECOMMENDER       - Content-Based NLP System", "  [04] NEWSSUMM++        - Data Engineering & NLP", "  [05] AUTOMATION        - n8n Architecture on Raspberry Pi", "  Scroll to [ SEC_02 ] for full visual interfaces."]; break
+      case "contact": response = ["> Opening comms port...", "  [@] aditya5namdeo@gmail.com", "  [LOC] Jabalpur, Madhya Pradesh, IN", "  Status: OPEN for collaborations. Use SEC_05 to transmit payload."]; break
+      case "fetch hardware": response = ["> Querying physical telemetry points...", "  [NODE_01] Raspberry Pi 3 Server Node Cluster // STATUS: ACTIVE", "  [NODE_02] Dell G15 Local Infrastructure Host  // STATUS: OPTIMAL", "  [n8n_ENV] Pipeline Server Worker Processes   // STATUS: LISTENING"]; break
+      case "fetch offline_logs": response = ["> Opening real-world telemetry channels...", "  [TRACK_01] Heavy progressive overload hypertrophic regimen running standard splits.", "  [TRACK_02] Garage maintenance logs: Custom matte upkeep for Classic 350 'Black Panther'."]; break
+      case "clear": setTerminalHistory([]); setTerminalInput(""); return;
+      default: response = [`ERROR: Command '${cmd}' unrecognized by mainframe core security layer.`]
     }
-
     setTerminalHistory(prev => [...prev, `guest@system:~$ ${terminalInput}`, ...response])
     setTerminalInput("")
+
+    // --- TERMINAL FOCUS LOCK ---
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 10)
+  }
+
+  // NEW: Background Formspree Interceptor
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormStatus("submitting")
+    const form = e.currentTarget
+    const data = new FormData(form)
+    try {
+      const response = await fetch("https://formspree.io/f/mbdbnado", {
+        method: "POST",
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      })
+      if (response.ok) {
+        setFormStatus("success")
+        form.reset()
+        setTimeout(() => setFormStatus("idle"), 4000)
+      } else {
+        setFormStatus("error")
+        setTimeout(() => setFormStatus("idle"), 4000)
+      }
+    } catch (error) {
+      setFormStatus("error")
+      setTimeout(() => setFormStatus("idle"), 4000)
+    }
   }
 
   return (
@@ -188,24 +159,32 @@ export default function Home() {
         </button>
       )}
 
-      {/* Header Section (Mobile Optimized) */}
+      {/* Header Section */}
       <header>
         <div className="container" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "16px", padding: "16px 0" }}>
-          <div 
-            className="logo glitch-hover" 
-            onClick={scrollToTop}
-            style={{ fontSize: "1.2rem", fontWeight: "bold", whiteSpace: "nowrap", cursor: "pointer", textTransform: "uppercase" }}
-          >
-            SYSTEM.REF
+
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <div className="logo glitch-hover" onClick={scrollToTop} style={{ fontSize: "1.2rem", fontWeight: "bold", whiteSpace: "nowrap", cursor: "pointer", textTransform: "uppercase" }}>
+              SYSTEM.REF
+            </div>
+            {/* THEME TOGGLE BUTTON */}
+            <button
+              onClick={() => setIsLightMode(!isLightMode)}
+              className="glitch-hover"
+              style={{ background: "transparent", border: "1px solid var(--accent-retro)", color: "var(--accent-retro)", padding: "4px 8px", fontSize: "0.6rem", fontFamily: "monospace", cursor: "pointer", fontWeight: "bold" }}
+            >
+              {isLightMode ? "[ DARK_OS ]" : "[ LIGHT_OS ]"}
+            </button>
           </div>
+
           <nav className="nav-links" style={{ display: "flex", flexWrap: "wrap", gap: "16px", justifyContent: "center", fontSize: "0.75rem" }}>
             <a href="#about">ABOUT ME</a>
             <a href="#work">PROJECTS</a>
             <a href="#experience">EXPERIENCE</a>
-            <a href="#lab">SKILLS</a>
-            <a href="#footer-node">CONTACT</a>
+            <a href="#skills">SKILLS</a>
+            <a href="#contact">CONTACT</a>
           </nav>
-          <div className="system-status" style={{ fontSize: "0.75rem", color: "var(--accent)", whiteSpace: "nowrap", textAlign: "right" }}>
+          <div className="system-status" style={{ fontSize: "0.75rem", color: "var(--accent-retro)", whiteSpace: "nowrap", textAlign: "right" }}>
             SYS_UP: 00:00:00 | CPU: --%
           </div>
         </div>
@@ -215,100 +194,55 @@ export default function Home() {
         {/* Hero Section */}
         <section className="hero">
           <div className="hero-content">
-            <p style={{ color: "var(--accent)", marginBottom: "10px" }}>{"[ INITIALIZING PROTOCOL... ]"}</p>
-            
+            <p style={{ color: "var(--accent-retro)", marginBottom: "10px" }}>{"[ INITIALIZING PROTOCOL... ]"}</p>
             <h2 style={{ fontSize: "1.2rem", color: "var(--text-secondary)", marginBottom: "8px", fontFamily: "monospace", letterSpacing: "2px" }}>
               ADITYA_NAMDEO //
             </h2>
-
-            <h1 style={{ textTransform: "uppercase", fontSize: "clamp(2rem, 8vw, 3.5rem)", lineHeight: "1.1", marginTop: "8px", marginBottom: "16px" }}>
+            <h1 style={{ textTransform: "uppercase", fontSize: "clamp(2rem, 8vw, 3.5rem)", lineHeight: "1.1", marginTop: "8px", marginBottom: "16px", color: "var(--text-primary)" }}>
               DATA & ML <span>SYSTEMS</span> DEVELOPER
             </h1>
             <p style={{ fontSize: "1.2rem", lineHeight: "1.8", maxWidth: "600px", color: "var(--text-secondary)" }}>
               Researching and implementing deep learning models,
-              training predictive regression arrays, and automating n8n pipeline workflows 
+              training predictive regression arrays, and automating n8n pipeline workflows
               from native Kotlin backend layers to live cloud deployments.
             </p>
-            
+
             {/* Front Page Action Controls & Social Nodes */}
             <div style={{ display: "flex", alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: "12px", marginTop: "32px", width: "100%" }}>
-              <a 
-                href="#work" 
-                className="btn-retro" 
-                style={{ margin: 0, transition: "all 0.2s ease" }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translate(-2px, -2px)'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translate(0px, 0px)'; }}
-              >
+              <a href="#work" className="btn-retro" style={{ margin: 0, transition: "all 0.2s ease" }}>
                 EXPLORE FILES
               </a>
-
-              {/* RESUME BUTTON WITH GLITCH EFFECT */}
-              <a 
-                href="/AdityaNamdeoResume.pdf" 
-                download="Aditya_Namdeo_Resume.pdf"
-                className="glitch-hover"
-                style={{ 
-                  margin: 0, 
-                  padding: "10px 20px",
-                  background: "transparent",
-                  color: "var(--accent)",
-                  border: "1px solid var(--accent)",
-                  fontFamily: "monospace",
-                  fontSize: "0.8rem",
-                  fontWeight: "bold",
-                  textDecoration: "none",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  whiteSpace: "nowrap"
-                }}
-              >
+              <a href="/AdityaNamdeoResume.pdf" download="Aditya_Namdeo_Resume.pdf" className="glitch-hover" style={{ margin: 0, padding: "10px 20px", background: "transparent", color: "var(--accent-retro)", border: "1px solid var(--accent-retro)", fontFamily: "monospace", fontSize: "0.8rem", fontWeight: "bold", textDecoration: "none", display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
                 GET_RESUME.PDF
               </a>
 
               <div style={{ display: "flex", gap: "12px" }}>
-                {/* GitHub */}
-                <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                {/* Social Nodes mapped to CSS vars */}
+                <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid var(--border-color)", background: "var(--surface)", borderRadius: "8px", color: "var(--text-secondary)", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent-retro)'; e.currentTarget.style.color = 'var(--accent-retro)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
                 </a>
-                
-                {/* LinkedIn */}
-                <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid var(--border-color)", background: "var(--surface)", borderRadius: "8px", color: "var(--text-secondary)", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent-retro)'; e.currentTarget.style.color = 'var(--accent-retro)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
                 </a>
-                
-                {/* Twitter / X */}
-                <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+                <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid var(--border-color)", background: "var(--surface)", borderRadius: "8px", color: "var(--text-secondary)", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent-retro)'; e.currentTarget.style.color = 'var(--accent-retro)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg>
                 </a>
-
-                {/* Kaggle */}
-                <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.633c0-.233.118-.35.354-.35h2.431c.234 0 .351.117.351.35v15.112l5.882-5.597c.14-.14.304-.21.492-.21h3.326c.188 0 .282.046.282.14 0 .047-.024.094-.07.141l-5.342 5.064 6.018 7.962c.046.046.07.093.07.14z"/></svg>
+                <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid var(--border-color)", background: "var(--surface)", borderRadius: "8px", color: "var(--text-secondary)", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent-retro)'; e.currentTarget.style.color = 'var(--accent-retro)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.633c0-.233.118-.35.354-.35h2.431c.234 0 .351.117.351.35v15.112l5.882-5.597c.14-.14.304-.21.492-.21h3.326c.188 0 .282.046.282.14 0 .047-.024.094-.07.141l-5.342 5.064 6.018 7.962c.046.046.07.093.07.14z" /></svg>
                 </a>
-
-                {/* Hugging Face */}
-                <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid #333", background: "#0a0a0a", borderRadius: "8px", color: "#a1a1aa", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#a1a1aa'; }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fontSize="13" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="monospace">HF</text>
-                  </svg>
+                <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", border: "1px solid var(--border-color)", background: "var(--surface)", borderRadius: "8px", color: "var(--text-secondary)", transition: "all 0.2s" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent-retro)'; e.currentTarget.style.color = 'var(--accent-retro)'; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fontSize="13" fontWeight="bold" fill="currentColor" stroke="none" fontFamily="monospace">HF</text></svg>
                 </a>
               </div>
             </div>
-
           </div>
           <div className="window-frame">
             <div className="window-header">
               <span>PORTRAIT_01.JPG</span>
               <div className="window-controls">
-                <button className="window-btn" aria-label="Minimize">
-                  <span className="minimize-icon"></span>
-                </button>
-                <button className="window-btn" aria-label="Maximize">
-                  <span className="maximize-icon"></span>
-                </button>
-                <button className="window-btn window-close" aria-label="Close">
-                  <span className="close-icon"></span>
-                </button>
+                <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
+                <button className="window-btn" aria-label="Maximize"><span className="maximize-icon"></span></button>
+                <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
               </div>
             </div>
             <img src="/hero-portrait.jpg" alt="Professional Portrait" className="hero-image" />
@@ -317,147 +251,72 @@ export default function Home() {
 
         {/* Real-time Engineering Stats Bar */}
         <div className="stats-bar font-mono">
-          <div className="stat-item">
-            <div className="stat-val" style={{ color: "var(--accent)" }}>01</div>
-            <div className="stat-label">ML INTERNSHIP</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-val" style={{ color: "var(--accent)" }}>05+</div>
-            <div className="stat-label">MODELS DEPLOYED</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-val" style={{ color: "var(--accent)" }}>17</div>
-            <div className="stat-label">CORE REPOS</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-val" style={{ color: "var(--accent)" }}><span className="tabular-nums">{formatUptime(uptime)}</span></div>
-            <div className="stat-label">SESSION_UPTIME</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-val" style={{ color: "var(--accent)" }}>{visits}</div>
-            <div className="stat-label">PAGE_VIEWS</div>
-          </div>
+          <div className="stat-item"><div className="stat-val" style={{ color: "var(--accent-retro)" }}>01</div><div className="stat-label">ML INTERNSHIP</div></div>
+          <div className="stat-item"><div className="stat-val" style={{ color: "var(--accent-retro)" }}>05+</div><div className="stat-label">MODELS DEPLOYED</div></div>
+          <div className="stat-item"><div className="stat-val" style={{ color: "var(--accent-retro)" }}>17</div><div className="stat-label">CORE REPOS</div></div>
+          <div className="stat-item"><div className="stat-val" style={{ color: "var(--accent-retro)" }}><span className="tabular-nums">{formatUptime(uptime)}</span></div><div className="stat-label">SESSION_UPTIME</div></div>
+          <div className="stat-item"><div className="stat-val" style={{ color: "var(--accent-retro)" }}>{visits}</div><div className="stat-label">PAGE_VIEWS</div></div>
         </div>
 
         {/* SEC_01: About Me Terminal Sector */}
         <section id="about" style={{ scrollMarginTop: "80px", marginTop: "60px", marginBottom: "60px" }} className="font-mono">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #222", paddingBottom: "8px", marginBottom: "24px" }}>
-            <span style={{ color: "var(--accent)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_01 // USER_PROFILE_LOGS ]</span>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid var(--border-color)", paddingBottom: "8px", marginBottom: "24px" }}>
+            <span style={{ color: "var(--accent-retro)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_01 // USER_PROFILE_LOGS ]</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "32px", alignItems: "start" }}>
             <div style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: "1.6" }}>
-              <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", marginBottom: "16px", letterSpacing: "-0.05em" }}>
+              <h2 style={{ color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", marginBottom: "16px", letterSpacing: "-0.05em" }}>
                 $ WHO <span style={{ background: "linear-gradient(to right, #00f2fe, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>AM I</span>
               </h2>
               <p style={{ marginBottom: "14px" }}>
-                I'm an undergraduate <span style={{ color: "#fff", borderBottom: "1px solid #444" }}>Computer Software Engineering</span> student at BGIEM with a core focus on building resilient, intelligent systems. My academic and development track drives me to bridge complex data structures and algorithmic logic straight into clean, production-grade deployment code.
+                I'm an undergraduate <span style={{ color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)" }}>Computer Software Engineering</span> student at BGIEM with a core focus on building resilient, intelligent systems. My academic and development track drives me to bridge complex data structures and algorithmic logic straight into clean, production-grade deployment code.
               </p>
               <p style={{ marginBottom: "14px" }}>
-                Recently I have completed my experience as a <span style={{ color: "var(--accent)", fontWeight: "bold" }}>Machine Learning Intern</span> at the Suvidha Foundation, where I focused on researching, building, and deploying deep learning models. My work inside advanced tech spaces is backed by global recognition, highlighted by my selection as a delegate for the international <span style={{ color: "#fff", fontWeight: "bold" }}>HPAIR 2026 Harvard Conference</span>.
+                Recently I have completed my experience as a <span style={{ color: "var(--accent-retro)", fontWeight: "bold" }}>Machine Learning Intern</span> at the Suvidha Foundation, where I focused on researching, building, and deploying deep learning models. My work inside advanced tech spaces is backed by global recognition, highlighted by my selection as a delegate for the international <span style={{ color: "var(--text-primary)", fontWeight: "bold" }}>HPAIR 2026 Harvard Conference</span>.
               </p>
-              <p style={{ color: "#666", fontSize: "0.75rem", borderLeft: "2px solid #222", paddingLeft: "12px", fontStyle: "italic" }}>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem", borderLeft: "2px solid var(--border-color)", paddingLeft: "12px", fontStyle: "italic" }}>
                 "When I'm not compiling predictive models in Python, you'll find me engineering backend microservices in Kotlin, orchestrating automated workflow node sequences via n8n, or analyzing runtime script bottlenecks."
               </p>
-
-              {/* NEW ACHIEVEMENT CONSOLE MODULE */}
-              <div style={{ border: "1px dashed var(--accent)", background: "rgba(250, 84, 28, 0.03)", padding: "20px", marginTop: "24px" }}>
-                <h3 style={{ fontSize: "0.8rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 16px 0", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                  ACHIEVEMENTS.LOG
-                </h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontFamily: "monospace", fontSize: "0.85rem", color: "#e4e4e7" }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> ML Intern @ Suvidha Foundation
-                  </div>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> HPAIR 2026 Delegate
-                  </div>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> Core Technical Member
-                  </div>
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-                    <span style={{ color: "#10b981", fontWeight: "bold" }}>[√]</span> Advanced Data Cleaning & Pruning
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "16px" }}>
-                <h3 style={{ fontSize: "0.75rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>
-                  01 // Machine Learning
-                </h3>
-                <p style={{ fontSize: "0.75rem", color: "#a1a1aa", margin: 0, lineHeight: "1.5" }}>
-                  Researching deep learning frameworks, training predictive regression arrays, and integrating generative vision automation pipelines like the Avi engine.
-                </p>
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "16px" }}>
+                <h3 style={{ fontSize: "0.75rem", color: "var(--accent-retro)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>01 // Machine Learning</h3>
+                <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", margin: 0, lineHeight: "1.5" }}>Researching deep learning frameworks, training predictive regression arrays, and integrating generative vision automation pipelines like the Avi engine.</p>
               </div>
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "16px" }}>
-                <h3 style={{ fontSize: "0.75rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>
-                  02 // Data Engineering
-                </h3>
-                <p style={{ fontSize: "0.75rem", color: "#a1a1aa", margin: 0, lineHeight: "1.5" }}>
-                  Structuring rule-based data cleaning engines, processing massive training sequences, and optimizing curated datasets for model validation token targets.
-                </p>
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "16px" }}>
+                <h3 style={{ fontSize: "0.75rem", color: "var(--accent-retro)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>02 // Data Engineering</h3>
+                <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", margin: 0, lineHeight: "1.5" }}>Structuring rule-based data cleaning engines, processing massive training sequences, and optimizing curated datasets for model validation token targets.</p>
               </div>
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "16px" }}>
-                <h3 style={{ fontSize: "0.75rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>
-                  03 // Systems Integration
-                </h3>
-                <p style={{ fontSize: "0.75rem", color: "#a1a1aa", margin: 0, lineHeight: "1.5" }}>
-                  Orchestrating automated operational node networks using n8n, building structured application back-ends in Kotlin, and configuring localized infrastructure server clusters.
-                </p>
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "16px" }}>
+                <h3 style={{ fontSize: "0.75rem", color: "var(--accent-retro)", textTransform: "uppercase", fontWeight: "bold", margin: "0 0 6px 0", letterSpacing: "0.05em" }}>03 // Systems Integration</h3>
+                <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", margin: 0, lineHeight: "1.5" }}>Orchestrating automated operational node networks using n8n, building structured application back-ends in Kotlin, and configuring localized infrastructure server clusters.</p>
               </div>
             </div>
           </div>
         </section>
-        
+
         {/* SEC_02: Portfolio Deployments */}
         <section id="work" style={{ scrollMarginTop: "80px" }}>
-          <h2 className="section-title">Latest Deployments</h2>
+          <h2 className="section-title" style={{ color: "var(--text-primary)" }}>Latest Deployments</h2>
           <div className="portfolio-grid">
-            
+
             {/* PROJECT_ALPHA CARD */}
             <div className="project-card">
-              <div style={{
-                position: "absolute",
-                inset: 0,
-                backgroundColor: "rgba(0, 0, 0, 0.85)",
-                backdropFilter: "blur(3px)",
-                zIndex: 30, 
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "2px dashed var(--accent)"
-              }}>
-                <div style={{ 
-                  background: "var(--accent)", 
-                  color: "#000", 
-                  padding: "8px 16px", 
-                  fontFamily: "monospace", 
-                  fontWeight: "900", 
-                  letterSpacing: "2px", 
-                  transform: "rotate(-2deg)",
-                  boxShadow: "4px 4px 0px #000"
-                }}>
+              <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0, 0, 0, 0.85)", backdropFilter: "blur(3px)", zIndex: 30, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "2px dashed var(--accent-retro)" }}>
+                <div style={{ background: "var(--accent-retro)", color: "var(--text-primary)", padding: "8px 16px", fontFamily: "monospace", fontWeight: "900", letterSpacing: "2px", transform: "rotate(-2deg)", boxShadow: "4px 4px 0px #000" }}>
                   [ SYS_LOCK: UNDER_CONSTRUCTION ]
                 </div>
-                <p style={{ color: "var(--accent)", fontSize: "0.75rem", fontFamily: "monospace", marginTop: "16px", textTransform: "uppercase" }}>
+                <p style={{ color: "var(--accent-retro)", fontSize: "0.75rem", fontFamily: "monospace", marginTop: "16px", textTransform: "uppercase" }}>
                   <span className="cursor-blink">_</span> Deployment pending
                 </p>
               </div>
-
               <div className="project-overlay">
-                <a href="https://github.com/cyberdragon55k/Avi" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  GITHUB
-                </a>
-                <a href="#" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  LIVE_VIEW
-                </a>
+                <a href="https://github.com/cyberdragon55k/Avi" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                <a href="#" className="overlay-link" target="_blank" rel="noopener noreferrer">LIVE_VIEW</a>
               </div>
-
-              <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+              <div className="window-header" style={{ background: "var(--border-color)", color: "var(--text-primary)" }}>
                 <span>PROJECT_ALPHA // AVI_ENGINE</span>
                 <div className="window-controls">
                   <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
@@ -465,30 +324,21 @@ export default function Home() {
                   <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
                 </div>
               </div>
-              
               <img src="/Avi.png" alt="Retro Tech" className="project-img" />
-              
               <div className="project-info">
                 <span className="project-tag">#COMPUTER_VISION #GENERATIVE_AI</span>
-                <h3 className="project-title">Avi Automated Visual Intelligence</h3>
-                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                  Engineered an AI-powered pipeline integrating FFmpeg, Firebase, and the Gemini Vision API to automatically extract and classify screen data streams into intelligent insights.
-                </p>
+                <h3 className="project-title" style={{ color: "var(--text-primary)" }}>Avi Automated Visual Intelligence</h3>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Engineered an AI-powered pipeline integrating FFmpeg, Firebase, and the Gemini Vision API to automatically extract and classify screen data streams into intelligent insights.</p>
               </div>
             </div>
 
             {/* PROJECT_BETA CARD */}
             <div className="project-card">
               <div className="project-overlay">
-                <a href="https://github.com/cyberdragon55k/Used-Bike-Price-Predictor" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  GITHUB
-                </a>
-                <a href="https://used-bike-price.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  LIVE_VIEW
-                </a>
+                <a href="https://github.com/cyberdragon55k/Used-Bike-Price-Predictor" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                <a href="https://used-bike-price.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">LIVE_VIEW</a>
               </div>
-
-              <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+              <div className="window-header" style={{ background: "var(--border-color)", color: "var(--text-primary)" }}>
                 <span>PROJECT_BETA // VALUATION_ENGINE</span>
                 <div className="window-controls">
                   <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
@@ -499,25 +349,18 @@ export default function Home() {
               <img src="/used-bike.png" alt="Coding" className="project-img" />
               <div className="project-info">
                 <span className="project-tag">#MACHINE_LEARNING #REGRESSION</span>
-                <h3 className="project-title">Used Bike Price Predictor</h3>
-                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                  Developed a high-precision ML valuation engine using linear regression to predict fair market motorcycle prices with 94% accuracy.
-                </p>
+                <h3 className="project-title" style={{ color: "var(--text-primary)" }}>Used Bike Price Predictor</h3>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Developed a high-precision ML valuation engine using linear regression to predict fair market motorcycle prices with 94% accuracy.</p>
               </div>
             </div>
 
             {/* PROJECT_GAMMA CARD */}
             <div className="project-card">
               <div className="project-overlay">
-                <a href="https://github.com/cyberdragon55k/movie_recommender_system" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  GITHUB
-                </a>
-                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  LIVE_VIEW
-                </a>
+                <a href="https://github.com/cyberdragon55k/movie_recommender_system" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">LIVE_VIEW</a>
               </div>
-
-              <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+              <div className="window-header" style={{ background: "var(--border-color)", color: "var(--text-primary)" }}>
                 <span>PROJECT_GAMMA // RECOMMENDER</span>
                 <div className="window-controls">
                   <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
@@ -528,29 +371,20 @@ export default function Home() {
               <img src="/movie-recsys.png" alt="Abstract Art" className="project-img" />
               <div className="project-info">
                 <span className="project-tag">#MACHINE_LEARNING #NLP</span>
-                <h3 className="project-title">Content-Based Movie Recommender</h3>
-                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                  Deployed an interactive application that calculates content similarity across thousands of data points to fetch live movie recommendations via the TMDb API.
-                </p>
+                <h3 className="project-title" style={{ color: "var(--text-primary)" }}>Content-Based Movie Recommender</h3>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Deployed an interactive application that calculates content similarity across thousands of data points to fetch live movie recommendations via the TMDb API.</p>
               </div>
             </div>
           </div>
 
-          {/* HIDDEN ARCHIVE GRID */}
           {showAllProjects && (
             <div className="portfolio-grid" style={{ marginTop: "30px", animation: "fadeIn 0.3s ease-in" }}>
-              
-              {/* PROJECT_DELTA: NEWSSUMM++ */}
               <div className="project-card">
                 <div className="project-overlay">
-                  <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  GITHUB
-                </a>
-                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  LIVE_VIEW
-                </a>
+                  <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                  <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">LIVE_VIEW</a>
                 </div>
-                <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+                <div className="window-header" style={{ background: "var(--border-color)", color: "var(--text-primary)" }}>
                   <span>PROJECT_DELTA // NEWSSUMM++</span>
                   <div className="window-controls">
                     <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
@@ -561,25 +395,17 @@ export default function Home() {
                 <img src="/newssumm-image.jpg" alt="Data Engineering" className="project-img" />
                 <div className="project-info">
                   <span className="project-tag">#DATA_ENGINEERING #NLP</span>
-                  <h3 className="project-title">NewsSumm++ Corpus Optimizer</h3>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                    Engineered a highly refined text dataset by designing rule-based parsing algorithms to clear formatting noise from large text collections.
-                  </p>
+                  <h3 className="project-title" style={{ color: "var(--text-primary)" }}>NewsSumm++ Corpus Optimizer</h3>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Engineered a highly refined text dataset by designing rule-based parsing algorithms to clear formatting noise from large text collections.</p>
                 </div>
               </div>
 
-
-              {/* PROJECT_EPSILON: N8N AUTOMATION */}
               <div className="project-card">
                 <div className="project-overlay">
-                  <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  GITHUB
-                </a>
-                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">
-                  LIVE_VIEW
-                </a>
+                  <a href="https://github.com/cyberdragon55k/NewsSumm-Plus" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                  <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">LIVE_VIEW</a>
                 </div>
-                <div className="window-header" style={{ background: "#333", color: "#fff" }}>
+                <div className="window-header" style={{ background: "var(--border-color)", color: "var(--text-primary)" }}>
                   <span>PROJECT_EPSILON // AUTOMATION</span>
                   <div className="window-controls">
                     <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
@@ -590,40 +416,27 @@ export default function Home() {
                 <img src="/n8n-image.jpg" alt="Automation Architecture" className="project-img" />
                 <div className="project-info">
                   <span className="project-tag">#SYSTEMS #RASPBERRY_PI</span>
-                  <h3 className="project-title">n8n Automation Architecture</h3>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                    Configured a local server system node on hardware utilizing specialized automated workflows for system syncs.
-                  </p>
+                  <h3 className="project-title" style={{ color: "var(--text-primary)" }}>n8n Automation Architecture</h3>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Configured a local server system node on hardware utilizing specialized automated workflows for system syncs.</p>
                 </div>
               </div>
-
             </div>
           )}
 
           <div style={{ display: "flex", justifyContent: "center", marginTop: "40px", width: "100%" }}>
-            <button 
-              onClick={() => setShowAllProjects(!showAllProjects)} 
-              className="btn-retro"
-              style={{ 
-                cursor: "crosshair", 
-                fontFamily: "monospace", 
-                letterSpacing: "1px",
-                fontSize: "0.85rem",
-                padding: "12px 24px"
-              }}
-            >
+            <button onClick={() => setShowAllProjects(!showAllProjects)} className="btn-retro" style={{ cursor: "crosshair", fontFamily: "monospace", letterSpacing: "1px", fontSize: "0.85rem", padding: "12px 24px" }}>
               {showAllProjects ? "[-] COLLAPSE_DIRECTORY" : "[+] EXPAND_ARCHIVE"}
             </button>
           </div>
         </section>
-        
-        {/* SEC_03: Experience & Education Vertical Stack Tracker */}
+
+        {/* SEC_03: Experience Tracking */}
         <section id="experience" style={{ scrollMarginTop: "80px", marginTop: "80px", marginBottom: "80px" }} className="font-mono">
-          <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid #222", paddingBottom: "8px", marginBottom: "40px" }}>
-            <span style={{ color: "var(--accent)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_03 // CHRONOLOGICAL_LOGS ]</span>
+          <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid var(--border-color)", paddingBottom: "8px", marginBottom: "40px" }}>
+            <span style={{ color: "var(--accent-retro)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_03 // CHRONOLOGICAL_LOGS ]</span>
           </div>
 
-          <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", marginBottom: "32px", letterSpacing: "-0.05em" }}>
+          <h2 style={{ color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", marginBottom: "32px", letterSpacing: "-0.05em" }}>
             JOURNEY // <span style={{ background: "linear-gradient(to right, #00f2fe, #fa541c, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>HISTORY</span>
           </h2>
 
@@ -631,16 +444,16 @@ export default function Home() {
             <div style={{ position: "absolute", left: "0", top: "8px", bottom: "8px", width: "2px", background: "linear-gradient(to bottom, #00f2fe 0%, #fa541c 50%, #9b51e0 100%)" }}></div>
 
             <div style={{ position: "relative", marginBottom: "40px", paddingLeft: "20px" }}>
-              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#00f2fe", border: "2px solid #000" }}></div>
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
-                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed #222", paddingBottom: "6px", marginBottom: "12px" }}>
+              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#00f2fe", border: "2px solid var(--surface)" }}></div>
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "20px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed var(--border-color)", paddingBottom: "6px", marginBottom: "12px" }}>
                   <div>
                     <span style={{ fontSize: "0.65rem", color: "#00f2fe", border: "1px solid rgba(0,242,254,0.3)", padding: "2px 6px", background: "rgba(0,242,254,0.05)", marginRight: "8px" }}>WORK</span>
-                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "#fff", margin: 0 }}>MACHINE LEARNING INTERN</h3>
+                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "var(--text-primary)", margin: 0 }}>MACHINE LEARNING INTERN</h3>
                   </div>
-                  <span style={{ fontSize: "0.75rem", color: "#555" }}>MARCH 2026 - MAY 2026 // REMOTE</span>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>MARCH 2026 - MAY 2026 // REMOTE</span>
                 </div>
-                <h4 style={{ fontSize: "0.8rem", color: "var(--accent)", margin: "0 0 12px 0", fontWeight: "bold" }}>SUVIDHA FOUNDATION</h4>
+                <h4 style={{ fontSize: "0.8rem", color: "var(--accent-retro)", margin: "0 0 12px 0", fontWeight: "bold" }}>SUVIDHA FOUNDATION</h4>
                 <ul style={{ margin: "0 0 16px 0", paddingLeft: "16px", color: "var(--text-secondary)", fontSize: "0.8rem" }} className="space-y-2">
                   <li>Engineered large data pipelines applying custom rule-based parsing architectures.</li>
                   <li>Pruned textual dataset anomalies to lock target training pairs down within high-quality validation thresholds.</li>
@@ -648,23 +461,23 @@ export default function Home() {
                 </ul>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {["Python", "Dataset Cleaning", "ML Pipelines", "Rule-Based Logic"].map((tag) => (
-                    <span key={tag} style={{ fontSize: "0.65rem", color: "#666", border: "1px solid #222", padding: "2px 8px", background: "#050505" }}>{tag}</span>
+                    <span key={tag} style={{ fontSize: "0.65rem", color: "var(--text-secondary)", border: "1px solid var(--border-color)", padding: "2px 8px", background: "var(--bg-color)" }}>{tag}</span>
                   ))}
                 </div>
               </div>
             </div>
 
             <div style={{ position: "relative", marginBottom: "40px", paddingLeft: "20px" }}>
-              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#fa541c", border: "2px solid #000" }}></div>
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
-                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed #222", paddingBottom: "6px", marginBottom: "12px" }}>
+              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#fa541c", border: "2px solid var(--surface)" }}></div>
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "20px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed var(--border-color)", paddingBottom: "6px", marginBottom: "12px" }}>
                   <div>
                     <span style={{ fontSize: "0.65rem", color: "#fa541c", border: "1px solid rgba(250,84,28,0.3)", padding: "2px 6px", background: "rgba(250,84,28,0.05)", marginRight: "8px" }}>LEADERSHIP</span>
-                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "#fff", margin: 0 }}>CORE TECHNICAL MEMBER</h3>
+                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "var(--text-primary)", margin: 0 }}>CORE TECHNICAL MEMBER</h3>
                   </div>
-                  <span style={{ fontSize: "0.75rem", color: "#555" }}>AUG 2025 - PRESENT // BGIEM</span>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>AUG 2025 - PRESENT // BGIEM</span>
                 </div>
-                <h4 style={{ fontSize: "0.8rem", color: "var(--accent)", margin: "0 0 12px 0", fontWeight: "bold" }}>MICROSOFT STUDENT CHAPTER</h4>
+                <h4 style={{ fontSize: "0.8rem", color: "var(--accent-retro)", margin: "0 0 12px 0", fontWeight: "bold" }}>MICROSOFT STUDENT CHAPTER</h4>
                 <ul style={{ margin: "0 0 16px 0", paddingLeft: "16px", color: "var(--text-secondary)", fontSize: "0.8rem" }} className="space-y-2">
                   <li>Leading the technical direction and executing developmental strategies for the campus chapter.</li>
                   <li>Organizing and managing core technical events, workshops, and student engagements.</li>
@@ -672,23 +485,23 @@ export default function Home() {
                 </ul>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {["Technical Leadership", "Teamwork", "Event Coordination", "Community Building"].map((tag) => (
-                    <span key={tag} style={{ fontSize: "0.65rem", color: "#666", border: "1px solid #222", padding: "2px 8px", background: "#050505" }}>{tag}</span>
+                    <span key={tag} style={{ fontSize: "0.65rem", color: "var(--text-secondary)", border: "1px solid var(--border-color)", padding: "2px 8px", background: "var(--bg-color)" }}>{tag}</span>
                   ))}
                 </div>
               </div>
             </div>
 
             <div style={{ position: "relative", paddingLeft: "20px" }}>
-              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#9b51e0", border: "2px solid #000" }}></div>
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
-                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed #222", paddingBottom: "6px", marginBottom: "12px" }}>
+              <div style={{ position: "absolute", left: "-24px", top: "4px", width: "10px", height: "10px", backgroundColor: "#9b51e0", border: "2px solid var(--surface)" }}></div>
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "20px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", gap: "10px", borderBottom: "1px dashed var(--border-color)", paddingBottom: "6px", marginBottom: "12px" }}>
                   <div>
                     <span style={{ fontSize: "0.65rem", color: "#9b51e0", border: "1px solid rgba(155,81,224,0.3)", padding: "2px 6px", background: "rgba(155,81,224,0.05)", marginRight: "8px" }}>EDUCATION</span>
-                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "#fff", margin: 0 }}>B.TECH IN COMPUTER SCIENCE</h3>
+                    <h3 style={{ display: "inline-block", fontSize: "1rem", fontWeight: "bold", color: "var(--text-primary)", margin: 0 }}>B.TECH IN COMPUTER SCIENCE</h3>
                   </div>
-                  <span style={{ fontSize: "0.75rem", color: "#555" }}>2024 - OCT 2028 // JABALPUR</span>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>2024 - OCT 2028 // JABALPUR</span>
                 </div>
-                <h4 style={{ fontSize: "0.8rem", color: "var(--accent)", margin: "0 0 12px 0", fontWeight: "bold" }}>BADERIA GLOBAL INSTITUTE OF ENGINEERING & MANAGEMENT</h4>
+                <h4 style={{ fontSize: "0.8rem", color: "var(--accent-retro)", margin: "0 0 12px 0", fontWeight: "bold" }}>BADERIA GLOBAL INSTITUTE OF ENGINEERING & MANAGEMENT</h4>
                 <ul style={{ margin: "0 0 16px 0", paddingLeft: "16px", color: "var(--text-secondary)", fontSize: "0.8rem" }} className="space-y-2">
                   <li>Currently specializing in Machine Learning paradigms and foundational Core System Designs.</li>
                   <li>Deeply engaging in core Data Structures & Algorithms (DSA) optimization metrics using C++.</li>
@@ -696,7 +509,7 @@ export default function Home() {
                 </ul>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {["C++ (DSA)", "Python", "SQL Databases", "System Architecture"].map((tag) => (
-                    <span key={tag} style={{ fontSize: "0.65rem", color: "#666", border: "1px solid #222", padding: "2px 8px", background: "#050505" }}>{tag}</span>
+                    <span key={tag} style={{ fontSize: "0.65rem", color: "var(--text-secondary)", border: "1px solid var(--border-color)", padding: "2px 8px", background: "var(--bg-color)" }}>{tag}</span>
                   ))}
                 </div>
               </div>
@@ -722,28 +535,28 @@ export default function Home() {
 
       <div className="container">
         {/* SEC_04: Interactive Terminal Console Section */}
-        <section className="terminal-section" id="lab" style={{ scrollMarginTop: "80px" }}>
+        <section 
+  className="terminal-section" 
+  id="skills" 
+  style={{ scrollMarginTop: "80px", cursor: "text" }} 
+  onClick={() => inputRef.current?.focus()}
+>
           <div className="terminal-header">SYSTEM_CONSOLE.EXE</div>
-          
-          {/* Increased maxHeight to 500px and added output indent styling */}
-          <div style={{ 
-            display: "flex", 
-            flexDirection: "column", 
-            gap: "6px", 
-            maxHeight: "500px", 
-            overflowY: "auto", 
-            marginBottom: "12px", 
-            paddingRight: "4px" 
-          }}>
+
+          {/* ADDED THE REF HERE and REMOVED THE DUMMY DIV AT THE BOTTOM */}
+          <div 
+            ref={terminalContainerRef} 
+            style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "500px", overflowY: "auto", marginBottom: "12px", paddingRight: "4px" }}
+          >
             {terminalHistory.map((line, idx) => (
               <div key={idx} className="terminal-row" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: "1.4" }}>
                 {line.startsWith("guest@system:~$") ? (
                   <div style={{ display: "flex", gap: "10px" }}>
-                    <span className="prompt" style={{ color: "var(--accent)", fontWeight: "bold" }}>guest@system:~$</span>
-                    <span className="command" style={{ color: "#fff" }}>{line.replace("guest@system:~$", "")}</span>
+                    <span className="prompt" style={{ color: "var(--accent-retro)", fontWeight: "bold" }}>guest@system:~$</span>
+                    <span className="command" style={{ color: "var(--text-primary)" }}>{line.replace("guest@system:~$", "")}</span>
                   </div>
                 ) : (
-                  <span className="output" style={{ color: "#a1a1aa", paddingLeft: "15px", display: "block" }}>
+                  <span className="output" style={{ color: "var(--text-secondary)", paddingLeft: "15px", display: "block" }}>
                     {line}
                   </span>
                 )}
@@ -751,167 +564,139 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Interactive Shell Input Field */}
           <form onSubmit={handleTerminalSubmit} style={{ display: "flex", alignItems: "center", width: "100%" }}>
-            <span className="prompt" style={{ whiteSpace: "nowrap", marginRight: "8px" }}>guest@system:~$</span>
-            <input 
-              type="text" 
+            <span className="prompt" style={{ whiteSpace: "nowrap", marginRight: "8px", fontWeight: "bold" }}>guest@system:~$</span>
+            <input
+              ref={inputRef}
+              type="text"
               value={terminalInput}
               onChange={(e) => setTerminalInput(e.target.value)}
               placeholder="Enter system flag..."
-              style={{
-                flex: 1,
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                color: "var(--accent)",
-                fontFamily: "monospace",
-                fontSize: "0.85rem",
-                caretColor: "var(--accent)"
-              }}
+              style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "var(--text-primary)", fontFamily: "monospace", fontSize: "0.85rem", caretColor: "var(--accent-retro)" }}
             />
           </form>
         </section>
 
-        {/* SEC_05: The Communication Port (Contact Form) */}
-        <section id="footer-node" style={{ scrollMarginTop: "80px", marginTop: "100px", marginBottom: "60px" }} className="font-mono">
-          <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid #222", paddingBottom: "8px", marginBottom: "40px" }}>
-            <span style={{ color: "var(--accent)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_05 // COMMUNICATION_PORT ]</span>
+        {/* SEC_05: Communication Port */}
+        <section id="contact" style={{ scrollMarginTop: "80px", marginTop: "100px", marginBottom: "60px" }} className="font-mono">
+          <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid var(--border-color)", paddingBottom: "8px", marginBottom: "40px" }}>
+            <span style={{ color: "var(--accent-retro)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_05 // COMMUNICATION_PORT ]</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-5 space-y-6">
-              <h2 style={{ color: "#fff", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", letterSpacing: "-0.05em", marginBottom: "16px", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+              <h2 style={{ color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: "900", textTransform: "uppercase", letterSpacing: "-0.05em", marginBottom: "16px", display: "flex", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
                 <span>INITIATE <span style={{ background: "linear-gradient(to right, #00f2fe, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>PING</span></span>
-                <span style={{ fontSize: "0.8rem", color: "#666", fontWeight: "normal", letterSpacing: "2px", borderLeft: "2px solid #333", paddingLeft: "12px" }}>[ CONTACT_ME ]</span>
+                <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)", fontWeight: "normal", letterSpacing: "2px", borderLeft: "2px solid var(--border-color)", paddingLeft: "12px" }}>[ CONTACT_ME ]</span>
               </h2>
               <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", lineHeight: "1.6" }}>
                 Have a complex dataset to prune, an algorithmic structure to optimize, or just want to chat about AI? Open a secure channel.
               </p>
 
-              <div style={{ border: "1px solid #222", background: "#0a0a0a", padding: "20px" }}>
-                <h3 style={{ fontSize: "0.75rem", color: "#fff", textTransform: "uppercase", fontWeight: "bold", marginBottom: "16px" }}>// SECURE_ENDPOINTS</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "0.8rem", color: "#a1a1aa" }}>
-                  
-                  {/* HIDDEN MAILTO BUTTON REPLACEMENT */}
+              <div style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "20px" }}>
+                <h3 style={{ fontSize: "0.75rem", color: "var(--text-primary)", textTransform: "uppercase", fontWeight: "bold", marginBottom: "16px" }}>// SECURE_ENDPOINTS</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "0.8rem", color: "var(--text-secondary)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <span style={{ color: "var(--accent)" }}>[MAIL]</span> 
-                    <a href="mailto:aditya5namdeo@gmail.com" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", borderBottom: "1px dashed var(--accent)" }}>
+                    <span style={{ color: "var(--accent-retro)" }}>[MAIL]</span>
+                    <a href="mailto:aditya5namdeo@gmail.com" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", borderBottom: "1px dashed var(--accent-retro)" }}>
                       [ DECRYPT_MAILTO ]
                     </a>
                   </div>
-                  
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <span style={{ color: "var(--accent)" }}>[LOC ]</span> <span>Jabalpur, Madhya Pradesh, IN</span>
+                    <span style={{ color: "var(--accent-retro)" }}>[LOC ]</span> <span>Jabalpur, Madhya Pradesh, IN</span>
                   </div>
                 </div>
               </div>
 
-              <div style={{ border: "1px solid var(--accent)", background: "rgba(250, 84, 28, 0.05)", padding: "20px" }}>
-                <h3 style={{ fontSize: "0.75rem", color: "var(--accent)", textTransform: "uppercase", fontWeight: "bold", marginBottom: "8px" }}>STATUS: OPEN</h3>
-                <p style={{ fontSize: "0.75rem", color: "#fff", margin: 0 }}>Looking for Machine Learning, Data Engineering, and intelligent systems collaborations.</p>
+              <div style={{ border: "1px solid var(--accent-retro)", background: "rgba(250, 84, 28, 0.05)", padding: "20px" }}>
+                <h3 style={{ fontSize: "0.75rem", color: "var(--accent-retro)", textTransform: "uppercase", fontWeight: "bold", marginBottom: "8px" }}>STATUS: OPEN</h3>
+                <p style={{ fontSize: "0.75rem", color: "var(--text-primary)", margin: 0 }}>Looking for Machine Learning, Data Engineering, and intelligent systems collaborations.</p>
               </div>
             </div>
 
+            {/* DYNAMIC FORMSPREE INTERCEPTOR */}
             <div className="md:col-span-7">
-              <form action="https://formspree.io/f/mbdbnado" method="POST" style={{ border: "1px solid #222", background: "#0a0a0a", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                
+              <form onSubmit={handleContactSubmit} style={{ border: "1px solid var(--border-color)", background: "var(--surface)", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <label style={{ fontSize: "0.7rem", color: "#666", textTransform: "uppercase" }}>IDENTIFIER [NAME]</label>
-                    <input type="text" name="name" required placeholder="guest_user" style={{ background: "#050505", border: "1px solid #333", padding: "10px", color: "#fff", fontSize: "0.8rem", fontFamily: "monospace", outline: "none" }} />
+                    <label style={{ fontSize: "0.7rem", color: "var(--text-secondary)", textTransform: "uppercase" }}>IDENTIFIER [NAME]</label>
+                    <input type="text" name="name" required placeholder="guest_user" style={{ background: "var(--bg-color)", border: "1px solid var(--border-color)", padding: "10px", color: "var(--text-primary)", fontSize: "0.8rem", fontFamily: "monospace", outline: "none" }} disabled={formStatus === "submitting"} />
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <label style={{ fontSize: "0.7rem", color: "#666", textTransform: "uppercase" }}>RETURN_ADDRESS [EMAIL]</label>
-                    <input type="email" name="email" required placeholder="user@node.com" style={{ background: "#050505", border: "1px solid #333", padding: "10px", color: "#fff", fontSize: "0.8rem", fontFamily: "monospace", outline: "none" }} />
+                    <label style={{ fontSize: "0.7rem", color: "var(--text-secondary)", textTransform: "uppercase" }}>RETURN_ADDRESS [EMAIL]</label>
+                    <input type="email" name="email" required placeholder="user@node.com" style={{ background: "var(--bg-color)", border: "1px solid var(--border-color)", padding: "10px", color: "var(--text-primary)", fontSize: "0.8rem", fontFamily: "monospace", outline: "none" }} disabled={formStatus === "submitting"} />
                   </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <label style={{ fontSize: "0.7rem", color: "#666", textTransform: "uppercase" }}>PAYLOAD [MESSAGE]</label>
-                  <textarea name="message" required rows={4} placeholder="Transmit data..." style={{ background: "#050505", border: "1px solid #333", padding: "10px", color: "#fff", fontSize: "0.8rem", fontFamily: "monospace", outline: "none", resize: "vertical" }}></textarea>
+                  <label style={{ fontSize: "0.7rem", color: "var(--text-secondary)", textTransform: "uppercase" }}>PAYLOAD [MESSAGE]</label>
+                  <textarea name="message" required rows={4} placeholder="Transmit data..." style={{ background: "var(--bg-color)", border: "1px solid var(--border-color)", padding: "10px", color: "var(--text-primary)", fontSize: "0.8rem", fontFamily: "monospace", outline: "none", resize: "vertical" }} disabled={formStatus === "submitting"}></textarea>
                 </div>
-                <button type="submit" className="glitch-hover" style={{ background: "var(--accent)", color: "#000", border: "none", padding: "12px", fontSize: "0.8rem", fontWeight: "bold", textTransform: "uppercase", cursor: "pointer", marginTop: "8px" }}>
-                  EXECUTE TRANSMISSION
+
+                <button
+                  type="submit"
+                  disabled={formStatus === "submitting" || formStatus === "success"}
+                  className={formStatus === "idle" ? "glitch-hover" : ""}
+                  style={{
+                    background: formStatus === "success" ? "#10b981" : formStatus === "error" ? "#ef4444" : "var(--accent-retro)",
+                    color: formStatus === "idle" ? "var(--bg-color)" : "#fff",
+                    border: "none",
+                    padding: "12px",
+                    fontSize: "0.8rem",
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
+                    cursor: formStatus === "idle" ? "pointer" : "default",
+                    marginTop: "8px",
+                    transition: "all 0.3s ease"
+                  }}
+                >
+                  {formStatus === "idle" && "EXECUTE TRANSMISSION"}
+                  {formStatus === "submitting" && "[ TRANSMITTING... ]"}
+                  {formStatus === "success" && "[ PAYLOAD DELIVERED ]"}
+                  {formStatus === "error" && "[ TRANSMISSION FAILED ]"}
                 </button>
               </form>
             </div>
           </div>
         </section>
 
-        {/* The Upgraded Brutalist Telemetry Footer Section */}
-        <footer style={{ borderTop: "2px solid var(--accent)", marginTop: "80px", paddingTop: "50px", paddingBottom: "50px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }} className="font-mono">
-          
+        {/* Footer */}
+        <footer style={{ borderTop: "2px solid var(--accent-retro)", marginTop: "80px", paddingTop: "50px", paddingBottom: "50px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }} className="font-mono">
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", maxWidth: "600px" }}>
-            <div style={{ fontSize: "0.65rem", color: "var(--accent)", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "10px", width: "100%", textAlign: "left", borderLeft: "2px solid var(--accent)", paddingLeft: "8px" }}>
+            <div style={{ fontSize: "0.65rem", color: "var(--accent-retro)", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "10px", width: "100%", textAlign: "left", borderLeft: "2px solid var(--accent-retro)", paddingLeft: "8px" }}>
               // LINK_ROUTING_TABLE
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "10px", width: "100%" }}>
-              <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
-                [ GITHUB ]
-              </a>
-              <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
-                [ LINKEDIN ]
-              </a>
-              <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
-                [ TWITTER ]
-              </a>
-              <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
-                [ KAGGLE ]
-              </a>
-              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid #222", background: "#050505", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>
-                [ HUGGINGFACE ]
-              </a>
+              <a href="https://github.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ GITHUB ]</a>
+              <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ LINKEDIN ]</a>
+              <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ TWITTER ]</a>
+              <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ KAGGLE ]</a>
+              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ HUGGINGFACE ]</a>
             </div>
           </div>
 
-          <div style={{ border: "1px dashed var(--accent)", background: "rgba(250, 84, 28, 0.02)", width: "100%", maxWidth: "600px", padding: "32px 24px", position: "relative", textAlign: "center", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: "-1px", left: "-1px", width: "12px", height: "12px", borderTop: "2px solid #fff", borderLeft: "2px solid #fff" }}></div>
-            <div style={{ position: "absolute", bottom: "-1px", right: "-1px", width: "12px", height: "12px", borderBottom: "2px solid #fff", borderRight: "2px solid #fff" }}></div>
-            
-            <pre style={{
-              fontFamily: "monospace",
-              fontSize: "clamp(0.3rem, 1vw, 0.6rem)", 
-              color: "var(--text-secondary)",
-              lineHeight: "1.1",
-              textAlign: "left",
-              marginBottom: "24px",
-              marginTop: "8px",
-              fontWeight: "bold",
-              textShadow: "0px 0px 4px rgba(255,255,255,0.2)",
-              whiteSpace: "pre",
-              maxWidth: "100%",
-              overflowX: "auto",
-              paddingBottom: "10px"
-            }}>
-{` █████╗ ██████╗ ██╗████████╗██╗   ██╗ █████╗     ███╗   ██╗ █████╗ ███╗   ███╗██████╗ ███████╗ ██████╗ 
+          <div style={{ border: "1px dashed var(--accent-retro)", background: "rgba(250, 84, 28, 0.02)", width: "100%", maxWidth: "600px", padding: "32px 24px", position: "relative", textAlign: "center", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: "-1px", left: "-1px", width: "12px", height: "12px", borderTop: "2px solid var(--text-primary)", borderLeft: "2px solid var(--text-primary)" }}></div>
+            <div style={{ position: "absolute", bottom: "-1px", right: "-1px", width: "12px", height: "12px", borderBottom: "2px solid var(--text-primary)", borderRight: "2px solid var(--text-primary)" }}></div>
+
+            <pre style={{ fontFamily: "monospace", fontSize: "clamp(0.3rem, 1vw, 0.6rem)", color: "var(--text-secondary)", lineHeight: "1.1", textAlign: "left", marginBottom: "24px", marginTop: "8px", fontWeight: "bold", whiteSpace: "pre", maxWidth: "100%", overflowX: "auto", paddingBottom: "10px" }}>
+              {` █████╗ ██████╗ ██╗████████╗██╗   ██╗ █████╗     ███╗   ██╗ █████╗ ███╗   ███╗██████╗ ███████╗ ██████╗ 
 ██╔══██╗██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝██╔══██╗    ████╗  ██║██╔══██╗████╗ ████║██╔══██╗██╔════╝██╔═══██╗
 ███████║██║  ██║██║   ██║    ╚████╔╝ ███████║    ██╔██╗ ██║███████║██╔████╔██║██║  ██║█████╗  ██║   ██║
 ██╔══██║██║  ██║██║   ██║     ╚██╔╝  ██╔══██║    ██║╚██╗██║██╔══██║██║╚██╔╝██║██║  ██║██╔══╝  ██║   ██║
 ██║  ██║██████╔╝██║   ██║      ██║   ██║  ██║    ██║ ╚████║██║  ██║██║ ╚═╝ ██║██████╔╝███████╗╚██████╔╝
 ╚═╝  ╚═╝╚═════╝ ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝    ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚═╝╚═════╝ ╚══════╝ ╚═════╝ `}
             </pre>
-            
-            <p style={{ color: "var(--accent)", fontSize: "0.65rem", margin: "0 0 8px 0", letterSpacing: "4px", textTransform: "uppercase", fontWeight: "bold" }}>
-              [SYSTEM_SHUTDOWN // 2026]
-            </p>
-            
-            <h2 style={{ fontSize: "1.8rem", fontWeight: "900", letterSpacing: "6px", margin: "0 0 12px 0", background: "linear-gradient(to right, #ff4d4d, #f97316, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", textTransform: "uppercase" }}>
-              END_OF_PAGE
-            </h2>
-            
-            <div style={{ width: "80px", height: "2px", background: "linear-gradient(to right, transparent, var(--accent), transparent)", margin: "16px auto" }}></div>
-            
-            <p style={{ color: "#a1a1aa", fontSize: "0.7rem", margin: 0, letterSpacing: "2px", textTransform: "uppercase" }}>
-              SHAPED BY CURIOSITY. DRIVEN BY PURPOSE.
-            </p>
+            <p style={{ color: "var(--accent-retro)", fontSize: "0.65rem", margin: "0 0 8px 0", letterSpacing: "4px", textTransform: "uppercase", fontWeight: "bold" }}>[SYSTEM_SHUTDOWN // 2026]</p>
+            <h2 style={{ fontSize: "1.8rem", fontWeight: "900", letterSpacing: "6px", margin: "0 0 12px 0", background: "linear-gradient(to right, #ff4d4d, #f97316, #9b51e0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", textTransform: "uppercase" }}>END_OF_PAGE</h2>
+            <div style={{ width: "80px", height: "2px", background: "linear-gradient(to right, transparent, var(--accent-retro), transparent)", margin: "16px auto" }}></div>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.7rem", margin: 0, letterSpacing: "2px", textTransform: "uppercase" }}>SHAPED BY CURIOSITY. DRIVEN BY PURPOSE.</p>
           </div>
-
         </footer>
 
         <div className="footer-badge" style={{ position: "relative", zIndex: 10, paddingBottom: "24px", textAlign: "center", width: "100%", display: "flex", justifyContent: "center" }}>
-          <div style={{ background: "var(--accent)", color: "#000", display: "inline-flex", alignItems: "center", fontSize: "0.65rem", fontFamily: "monospace", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
+          <div style={{ background: "var(--accent-retro)", color: "var(--bg-color)", display: "inline-flex", alignItems: "center", fontSize: "0.65rem", fontFamily: "monospace", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
             <span style={{ background: "rgba(0, 0, 0, 0.12)", padding: "6px 12px" }}>SYS_ADMIN // A.NAMDEO</span>
-            <span style={{ background: "#000", color: "var(--accent)", padding: "5px 12px", border: "1px solid var(--accent)" }}>ENV // PRODUCTION</span>
+            <span style={{ background: "var(--surface)", color: "var(--accent-retro)", padding: "5px 12px", border: "1px solid var(--accent-retro)" }}>STATUS // AVAILABLE</span>
           </div>
         </div>
       </div>

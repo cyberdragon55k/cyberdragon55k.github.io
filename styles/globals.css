@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -39,7 +38,7 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Added retro portfolio theme variables */
+  /* DARK MODE (DEFAULT) - Retro portfolio theme variables */
   --bg-color: #0d0d0d;
   --surface: #1a1a1a;
   --accent-retro: #ff4d00;
@@ -47,6 +46,21 @@
   --text-secondary: #999999;
   --border-color: #333333;
   --retro-shadow: 4px 4px 0px #ff4d00;
+  --dot-color: rgb(51, 51, 51);
+  --scanline-color: rgba(0, 0, 0, 0.25);
+}
+
+/* LIGHT MODE OVERRIDES - Classic IBM / White Mac Terminal aesthetic */
+.light-mode {
+  --bg-color: #f4f4f5;      /* Vintage paper gray */
+  --surface: #ffffff;       /* Pure white panels */
+  --accent-retro: #e64500;  /* Slightly darker orange for high contrast */
+  --text-primary: #18181b;  /* Near black text */
+  --text-secondary: #52525b;/* Dark gray muted text */
+  --border-color: #d4d4d8;  /* Light gray borders */
+  --retro-shadow: 4px 4px 0px #e64500;
+  --dot-color: rgb(212, 212, 216); /* Very faint background dots */
+  --scanline-color: rgba(0, 0, 0, 0.05); /* Faint scanlines */
 }
 
 .dark {
@@ -135,13 +149,14 @@
   
   body {
     @apply bg-background text-foreground;
-    /* Override with retro portfolio styles */
+    /* Updated with dynamic variables and transition */
     background-color: var(--bg-color) !important;
     color: var(--text-primary) !important;
     font-family: "Space Mono", monospace !important;
     overflow-x: hidden;
-    background-image: radial-gradient(circle, rgb(51, 51, 51) 1px, transparent 1px);
+    background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
     background-size: 30px 30px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Universal custom cursor fallback definition */
@@ -154,13 +169,13 @@
     cursor: crosshair !important;
   }
 
-  /* CRT scanline effect overlay */
+  /* CRT scanline effect overlay - Updated to use variable */
   body::before {
     content: " ";
     display: block;
     position: fixed;
     inset: 0px;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%) 0% 0% / 100% 4px,
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, var(--scanline-color) 50%) 0% 0% / 100% 4px,
       linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)) 0% 0% / 3px 100%;
     z-index: 9999;
     pointer-events: none;
@@ -186,6 +201,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .logo {
@@ -253,6 +269,7 @@ header {
   box-shadow: var(--retro-shadow);
   background: var(--surface);
   padding: 4px;
+  transition: all 0.3s ease;
 }
 
 .window-header {
@@ -265,6 +282,7 @@ header {
   font-weight: 700;
   font-size: 0.8rem;
   margin-bottom: 4px;
+  transition: all 0.3s ease;
 }
 
 /* Added proper window control button styles matching retro UI */
@@ -364,6 +382,7 @@ header {
   padding: 30px;
   margin-bottom: 100px;
   background: var(--surface);
+  transition: all 0.3s ease;
 }
 
 .stat-item {
@@ -435,14 +454,14 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.85); /* Stays dark for contrast even in light mode */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   opacity: 0;
   transition: opacity 0.3s ease;
-  z-index: 20; /* High enough to cover header, image, and info */
+  z-index: 20; 
 }
 
 .project-card:hover .project-overlay {
@@ -451,7 +470,7 @@ header {
 
 /* The orange link buttons */
 .overlay-link {
-  color: var(--text-primary);
+  color: #ffffff; /* Explicitly white for dark overlay */
   text-decoration: none;
   font-family: "Space Mono", monospace;
   font-size: 0.8rem;
@@ -464,7 +483,7 @@ header {
 
 .overlay-link:hover {
   background: var(--accent-retro);
-  color: var(--bg-color);
+  color: #ffffff;
   font-weight: bold;
 }
 
@@ -503,6 +522,7 @@ header {
   background: var(--accent-retro);
   color: var(--bg-color);
   margin-bottom: 100px;
+  transition: all 0.3s ease;
 }
 
 .marquee-text {
@@ -520,30 +540,28 @@ header {
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .terminal-section {
-  background: rgb(0, 0, 0);
+  background: var(--bg-color); /* Updated to dynamic background */
   border: 2px solid var(--border-color);
   padding: 40px;
   margin-bottom: 100px;
   position: relative;
+  transition: all 0.3s ease;
 }
 
 .terminal-header {
   position: absolute;
   top: -15px;
   left: 20px;
-  background: var(--bg-color);
+  background: var(--surface); /* Make header pop slightly off the background */
   padding: 0 10px;
   font-size: 0.8rem;
   color: var(--accent-retro);
+  border: 1px solid var(--border-color);
 }
 
 .terminal-row {
@@ -557,7 +575,7 @@ header {
 }
 
 .command {
-  color: rgb(255, 255, 255);
+  color: var(--text-primary); /* Updated from static white */
 }
 
 .output {
@@ -582,7 +600,7 @@ footer {
 .btn-retro {
   display: inline-block;
   background: var(--accent-retro);
-  color: var(--bg-color);
+  color: var(--surface); /* Reverted text inside buttons */
   padding: 15px 30px;
   font-weight: 700;
   text-decoration: none;
@@ -606,12 +624,8 @@ footer {
 }
 
 @keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  50% { opacity: 0; }
 }
-
-/* Removed floating badge styles and added footer badge + scroll to top button styles */
 
 /* Footer badge styles matching retro brutalist design */
 .footer-badge {
@@ -621,6 +635,7 @@ footer {
   padding: 20px;
   text-align: center;
   margin-top: 0;
+  transition: all 0.3s ease;
 }
 
 .badge-link-footer {
@@ -662,7 +677,7 @@ footer {
   height: 50px;
   background: var(--accent-retro);
   border: 2px solid var(--text-primary);
-  color: var(--bg-color);
+  color: var(--surface);
   font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
@@ -686,284 +701,75 @@ footer {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive styles for mobile */
 @media (max-width: 768px) {
-  .container {
-    width: 100%;
-    padding: 0 15px;
-  }
-
-  header {
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .logo {
-    font-size: 1.2rem;
-  }
-
-  .nav-links {
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .nav-links a {
-    font-size: 0.75rem;
-  }
-
-  .system-status {
-    font-size: 0.65rem;
-    text-align: center;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 40px 0;
-    gap: 30px;
-  }
-
-  .hero-content h1 {
-    font-size: 2.5rem;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
-  }
-
-  .hero-image {
-    height: 300px;
-  }
-
-  .window-frame {
-    box-shadow: 2px 2px 0px var(--accent-retro);
-  }
-
-  /* Added responsive styles for window control buttons */
-  .window-btn {
-    width: 14px;
-    height: 14px;
-  }
-
-  .minimize-icon {
-    width: 6px;
-  }
-
-  .maximize-icon {
-    width: 6px;
-    height: 6px;
-  }
-
-  .close-icon {
-    width: 8px;
-    height: 8px;
-  }
-
-  .close-icon::before,
-  .close-icon::after {
-    width: 8px;
-  }
-
-  .stats-bar {
-    flex-direction: column;
-    padding: 20px;
-    margin-bottom: 50px;
-  }
-
-  .stat-item {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 20px 0;
-    text-align: center;
-  }
-
-  .stat-item:last-child {
-    border-bottom: none;
-  }
-
-  .stat-val {
-    font-size: 2rem;
-  }
-
-  .section-title {
-    font-size: 1.75rem;
-    gap: 10px;
-  }
-
-  .portfolio-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin-bottom: 50px;
-  }
-
-  .project-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 4px 4px 0px var(--accent-retro);
-  }
-
-  .project-img {
-    height: 200px;
-  }
-
-  .marquee-text {
-    font-size: 1.2rem;
-  }
-
-  .marquee-text span {
-    margin-right: 30px;
-  }
-
-  .terminal-section {
-    padding: 30px 15px;
-    margin-bottom: 50px;
-  }
-
-  .terminal-row {
-    flex-direction: column;
-    gap: 5px;
-    font-size: 0.85rem;
-  }
-
-  footer {
-    flex-direction: column;
-    gap: 30px;
-    align-items: flex-start;
-    padding: 40px 0;
-  }
-
-  .footer-logo h2 {
-    font-size: 2rem;
-  }
-
-  footer > div:last-child {
-    text-align: left !important;
-  }
-
-  footer a {
-    display: block;
-    margin-left: 0 !important;
-    margin-bottom: 10px;
-  }
-
-  .btn-retro {
-    padding: 12px 24px;
-    font-size: 0.9rem;
-    box-shadow: 3px 3px 0px var(--text-primary);
-  }
-
-  .btn-retro:hover {
-    box-shadow: 1.5px 1.5px 0px var(--text-primary);
-  }
-
-  /* Removed floating badge mobile styles and added footer badge + scroll to top mobile styles */
-
-  /* Mobile responsive styles for footer badge */
-  .badge-content-footer {
-    font-size: 0.7rem;
-    gap: 5px;
-  }
-
-  .badge-content-footer .badge-separator {
-    font-size: 0.95rem;
-  }
-
-  .footer-badge {
-    padding: 15px;
-  }
-
-  /* Mobile responsive styles for scroll to top button */
-  .scroll-to-top {
-    bottom: 20px;
-    right: 20px;
-    width: 45px;
-    height: 45px;
-    box-shadow: 3px 3px 0px var(--text-primary);
-  }
-
-  .scroll-to-top:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0px var(--text-primary);
-  }
-
-  .scroll-arrow {
-    font-size: 1.5rem;
-  }
+  .container { width: 100%; padding: 0 15px; }
+  header { flex-direction: column; gap: 15px; padding: 15px; }
+  .logo { font-size: 1.2rem; }
+  .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
+  .nav-links a { font-size: 0.75rem; }
+  .system-status { font-size: 0.65rem; text-align: center; }
+  .hero { grid-template-columns: 1fr; padding: 40px 0; gap: 30px; }
+  .hero-content h1 { font-size: 2.5rem; }
+  .hero-content p { font-size: 1rem; }
+  .hero-image { height: 300px; }
+  .window-frame { box-shadow: 2px 2px 0px var(--accent-retro); }
+  .window-btn { width: 14px; height: 14px; }
+  .minimize-icon { width: 6px; }
+  .maximize-icon { width: 6px; height: 6px; }
+  .close-icon { width: 8px; height: 8px; }
+  .close-icon::before, .close-icon::after { width: 8px; }
+  .stats-bar { flex-direction: column; padding: 20px; margin-bottom: 50px; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border-color); padding: 20px 0; text-align: center; }
+  .stat-item:last-child { border-bottom: none; }
+  .stat-val { font-size: 2rem; }
+  .section-title { font-size: 1.75rem; gap: 10px; }
+  .portfolio-grid { grid-template-columns: 1fr; gap: 20px; margin-bottom: 50px; }
+  .project-card:hover { transform: translateY(-3px); box-shadow: 4px 4px 0px var(--accent-retro); }
+  .project-img { height: 200px; }
+  .marquee-text { font-size: 1.2rem; }
+  .marquee-text span { margin-right: 30px; }
+  .terminal-section { padding: 30px 15px; margin-bottom: 50px; }
+  .terminal-row { flex-direction: column; gap: 5px; font-size: 0.85rem; }
+  footer { flex-direction: column; gap: 30px; align-items: flex-start; padding: 40px 0; }
+  .footer-logo h2 { font-size: 2rem; }
+  footer > div:last-child { text-align: left !important; }
+  footer a { display: block; margin-left: 0 !important; margin-bottom: 10px; }
+  .btn-retro { padding: 12px 24px; font-size: 0.9rem; box-shadow: 3px 3px 0px var(--text-primary); }
+  .btn-retro:hover { box-shadow: 1.5px 1.5px 0px var(--text-primary); }
+  .badge-content-footer { font-size: 0.7rem; gap: 5px; }
+  .badge-content-footer .badge-separator { font-size: 0.95rem; }
+  .footer-badge { padding: 15px; }
+  .scroll-to-top { bottom: 20px; right: 20px; width: 45px; height: 45px; box-shadow: 3px 3px 0px var(--text-primary); }
+  .scroll-to-top:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px var(--text-primary); }
+  .scroll-arrow { font-size: 1.5rem; }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .container {
-    width: 100%;
-    padding: 0 30px;
-  }
-
-  header {
-    padding: 15px 20px;
-  }
-
-  .nav-links {
-    gap: 25px;
-  }
-
-  .hero {
-    gap: 40px;
-    padding: 70px 0;
-  }
-
-  .hero-content h1 {
-    font-size: 4rem;
-  }
-
-  .portfolio-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-  }
-
-  .stats-bar {
-    padding: 25px;
-  }
-
-  .stat-item {
-    padding: 0 25px;
-  }
+  .container { width: 100%; padding: 0 30px; }
+  header { padding: 15px 20px; }
+  .nav-links { gap: 25px; }
+  .hero { gap: 40px; padding: 70px 0; }
+  .hero-content h1 { font-size: 4rem; }
+  .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 25px; }
+  .stats-bar { padding: 25px; }
+  .stat-item { padding: 0 25px; }
 }
 
 @media (max-width: 480px) {
-  .hero-content h1 {
-    font-size: 2rem;
-  }
-
-  .hero-content p {
-    font-size: 0.9rem;
-  }
-
-  .section-title {
-    font-size: 1.5rem;
-  }
-
-  .marquee-text {
-    font-size: 1rem;
-  }
-
-  .terminal-row {
-    font-size: 0.75rem;
-  }
-
-  .footer-logo h2 {
-    font-size: 1.5rem;
-  }
+  .hero-content h1 { font-size: 2rem; }
+  .hero-content p { font-size: 0.9rem; }
+  .section-title { font-size: 1.5rem; }
+  .marquee-text { font-size: 1rem; }
+  .terminal-row { font-size: 0.75rem; }
+  .footer-logo h2 { font-size: 1.5rem; }
 }
-/* --- SYSTEM GLITCH ANIMATION --- */
+
+/* --- SYSTEM GLITCH ANIMATION (Updated for Light/Dark Context) --- */
 .glitch-hover {
   position: relative;
   transition: all 0.1s ease;
@@ -972,15 +778,15 @@ footer {
 .glitch-hover:hover {
   animation: text-glitch 0.2s linear infinite;
   background: rgba(250, 84, 28, 0.1) !important;
-  color: #fff !important;
+  color: var(--text-primary) !important;
   cursor: crosshair;
 }
 
 @keyframes text-glitch {
   0% { transform: translate(0); }
-  20% { transform: translate(-2px, 1px); color: #ff4d4d; text-shadow: 2px 0px 0px cyan; }
-  40% { transform: translate(-1px, -1px); color: #fff; text-shadow: none; }
-  60% { transform: translate(2px, 1px); color: cyan; text-shadow: -2px 0px 0px #ff4d4d; }
-  80% { transform: translate(1px, -1px); color: #fff; text-shadow: none; }
+  20% { transform: translate(-2px, 1px); color: var(--accent-retro); text-shadow: 2px 0px 0px cyan; }
+  40% { transform: translate(-1px, -1px); color: var(--text-primary); text-shadow: none; }
+  60% { transform: translate(2px, 1px); color: cyan; text-shadow: -2px 0px 0px var(--accent-retro); }
+  80% { transform: translate(1px, -1px); color: var(--text-primary); text-shadow: none; }
   100% { transform: translate(0); }
 }
