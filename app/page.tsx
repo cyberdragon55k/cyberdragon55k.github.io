@@ -417,7 +417,7 @@ export default function Home() {
                 <div className="project-info">
                   <span className="project-tag">#SYSTEMS #RASPBERRY_PI</span>
                   <h3 className="project-title" style={{ color: "var(--text-primary)" }}>n8n Automation Architecture</h3>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Configured a local server system node on hardware utilizing specialized automated workflows for system syncs.</p>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Configured a local server system on hardware utilizing specialized automated workflows for system syncs.</p>
                 </div>
               </div>
             </div>
@@ -671,6 +671,9 @@ export default function Home() {
               <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ TWITTER ]</a>
               <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ KAGGLE ]</a>
               <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ HUGGINGFACE ]</a>
+              <a href="mailto:aditya5namdeo@gmail.com" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ SECURE_PING ]</a>
+              <a href="https://discordapp.com/users/824946274721202176" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ DISCORD ]</a>
+              <a href="/AdityaNamdeoResume.pdf" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ RESUME_PDF ]</a>
             </div>
           </div>
 
