@@ -53,39 +53,70 @@ export default function Home() {
   }, [isLightMode])
 
   useEffect(() => {
-    fetch('https://api.counterapi.dev/v1/cyberdragon55k/portfolio_visits/up')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.count) {
-          setVisits(data.count.toString().padStart(4, '0'));
-        }
-      })
-      .catch(err => console.error("Telemetry ping failed:", err));
+  // Show cached value instantly (prevents "---" flash)
+  const cachedViews = localStorage.getItem("portfolio_views");
 
-    const timer = setInterval(() => setUptime((prev) => prev + 1), 1000)
+  if (cachedViews) {
+    setVisits(cachedViews);
+  }
 
-    function updateClock() {
-      const now = new Date()
-      const timeStr = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0") + ":" + now.getSeconds().toString().padStart(2, "0")
-      const statusElement = document.querySelector(".system-status")
-      if (statusElement) {
-        statusElement.textContent = `SYS_UP: ${timeStr} | CPU: ${Math.floor(Math.random() * 20) + 5}%`
+  // Increment counter and get updated value
+  fetch("https://api.counterapi.dev/v1/cyberdragon55k/portfolio_visits/up")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data?.count !== undefined) {
+        const formatted = data.count.toString().padStart(5, "0");
+
+        setVisits(formatted);
+
+        // Save latest value for next visit
+        localStorage.setItem("portfolio_views", formatted);
       }
-    }
-    updateClock()
-    const clockInterval = setInterval(updateClock, 1000)
+    })
+    .catch((err) => {
+      console.error("Telemetry ping failed:", err);
+    });
 
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 500)
-    }
+  // Session uptime timer
+  const timer = setInterval(() => {
+    setUptime((prev) => prev + 1);
+  }, 1000);
 
-    window.addEventListener("scroll", handleScroll)
-    return () => {
-      clearInterval(timer)
-      clearInterval(clockInterval)
-      window.removeEventListener("scroll", handleScroll)
+  function updateClock() {
+    const now = new Date();
+
+    const timeStr =
+      now.getHours().toString().padStart(2, "0") +
+      ":" +
+      now.getMinutes().toString().padStart(2, "0") +
+      ":" +
+      now.getSeconds().toString().padStart(2, "0");
+
+    const statusElement = document.querySelector(".system-status");
+
+    if (statusElement) {
+      statusElement.textContent = `SYS_UP: ${timeStr} | CPU: ${
+        Math.floor(Math.random() * 20) + 5
+      }%`;
     }
-  }, [])
+  }
+
+  updateClock();
+
+  const clockInterval = setInterval(updateClock, 1000);
+
+  const handleScroll = () => {
+    setShowScrollTop(window.scrollY > 500);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => {
+    clearInterval(timer);
+    clearInterval(clockInterval);
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
 
   const formatUptime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0')
@@ -357,22 +388,22 @@ export default function Home() {
             {/* PROJECT_GAMMA CARD */}
             <div className="project-card">
               <div className="project-overlay">
-                <a href="https://github.com/cyberdragon55k/movie_recommender_system" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
-                <a href="https://moivere.streamlit.app/" className="overlay-link" target="_blank" rel="noopener noreferrer">LIVE_VIEW</a>
+                <a href="https://github.com/cyberdragon55k/ChanakyaNiti" className="overlay-link" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                <a href="https://github.com/cyberdragon55k/ChanakyaNiti/releases/tag/v1.0.0" className="overlay-link" target="_blank" rel="noopener noreferrer">DOWNLOAD APK</a>
               </div>
               <div className="window-header" style={{ background: "var(--border-color)", color: "var(--text-primary)" }}>
-                <span>PROJECT_GAMMA // RECOMMENDER</span>
+                <span>PROJECT_GAMMA // ANDROID APP</span>
                 <div className="window-controls">
                   <button className="window-btn" aria-label="Minimize"><span className="minimize-icon"></span></button>
                   <button className="window-btn" aria-label="Maximize"><span className="maximize-icon"></span></button>
                   <button className="window-btn window-close" aria-label="Close"><span className="close-icon"></span></button>
                 </div>
               </div>
-              <img src="/movie-recsys.png" alt="Abstract Art" className="project-img" />
+              <img src="/chanakya-niti.png" alt="Chanakya Niti Android App" className="project-img" />
               <div className="project-info">
-                <span className="project-tag">#MACHINE_LEARNING #NLP</span>
-                <h3 className="project-title" style={{ color: "var(--text-primary)" }}>Content-Based Movie Recommender</h3>
-                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Deployed an interactive application that calculates content similarity across thousands of data points to fetch live movie recommendations via the TMDb API.</p>
+                <span className="project-tag">#ANDROID #KOTLIN #JETPACK_COMPOSE</span>
+                <h3 className="project-title" style={{ color: "var(--text-primary)" }}>Chanakya Niti</h3>
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Built a premium native Android application featuring all 280 authentic Chanakya Niti shloka's with Sanskrit, Hindi, and English translations, manuscript-inspired themes, bookmark support, offline reading, and shareable verse cards generated using native Canvas APIs.</p>
               </div>
             </div>
           </div>
