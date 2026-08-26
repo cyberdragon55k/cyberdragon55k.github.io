@@ -391,7 +391,10 @@ export default function Home() {
         </section>
 
         {/* SEC_02: Portfolio Deployments */}
-        <section id="work" style={{ scrollMarginTop: "80px" }}>
+        <section id="experience" style={{ scrollMarginTop: "80px", marginTop: "80px", marginBottom: "80px" }} className="font-mono">
+          <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid var(--border-color)", paddingBottom: "8px", marginBottom: "40px" }}>
+            <span style={{ color: "var(--accent-retro)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_02 // PORTFOLIO_DEPLOYMENTS ]</span>
+          </div>
           <h2 className="section-title" style={{ color: "var(--text-primary)" }}>Latest Deployments</h2>
           <div className="portfolio-grid">
 
@@ -628,13 +631,37 @@ export default function Home() {
 
       <div className="container">
         {/* SEC_04: Interactive Terminal Console Section */}
-        <section 
-  className="terminal-section" 
-  id="skills" 
-  style={{ scrollMarginTop: "80px", cursor: "text" }} 
+<section
+  className="terminal-section"
+  id="skills"
+  style={{
+    scrollMarginTop: "80px",
+    marginTop: "80px",
+    marginBottom: "80px"
+  }}
   onClick={() => inputRef.current?.focus()}
 >
-          <div className="terminal-header">SYSTEM_CONSOLE.EXE</div>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      borderBottom: "1px solid var(--border-color)",
+      paddingBottom: "8px",
+      marginBottom: "40px"
+    }}
+  >
+    <span
+      style={{
+        color: "var(--accent-retro)",
+        fontSize: "0.8rem",
+        fontWeight: "bold"
+      }}
+    >
+      [ SEC_04 // SKILLS_CONSOLE ]
+    </span>
+  </div>
+
+  <div className="terminal-header">SYSTEM_CONSOLE.EXE</div>
 
           {/* ADDED THE REF HERE and REMOVED THE DUMMY DIV AT THE BOTTOM */}
           <div 
@@ -763,8 +790,8 @@ export default function Home() {
               <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ LINKEDIN ]</a>
               <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ TWITTER ]</a>
               <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ KAGGLE ]</a>
-              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ HUGGINGFACE ]</a>
-              <a href="mailto:aditya5namdeo@gmail.com" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ SECURE_PING ]</a>
+              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ HUGGINGFACE]</a>
+              <a href="mailto:aditya5namdeo@gmail.com" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ SECURE_PING]</a>
               <a href="https://discordapp.com/users/824946274721202176" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ DISCORD ]</a>
               <a href="/AdityaNamdeoResume.pdf" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ RESUME_PDF ]</a>
             </div>
@@ -791,8 +818,8 @@ export default function Home() {
 
         <div className="footer-badge" style={{ position: "relative", zIndex: 10, paddingBottom: "24px", textAlign: "center", width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ background: "var(--accent-retro)", color: "var(--bg-color)", display: "inline-flex", alignItems: "center", fontSize: "0.65rem", fontFamily: "monospace", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
-            <span style={{ background: "rgba(0, 0, 0, 0.12)", padding: "6px 12px" }}>SYS_ADMIN // A.NAMDEO</span>
-            <span style={{ background: "var(--surface)", color: "var(--accent-retro)", padding: "5px 12px", border: "1px solid var(--accent-retro)" }}>STATUS // AVAILABLE</span>
+            <span style={{ background: "rgba(0, 0, 0, 0.12)", padding: "6px 12px" }}>A CYBERDRAGON55K PROJECT</span>
+            <span style={{ background: "var(--surface)", color: "var(--accent-retro)", padding: "5px 12px", border: "1px solid var(--accent-retro)" }}>BUILT BY ADITYA NAMDEV</span>
           </div>
         </div>
       </div>
