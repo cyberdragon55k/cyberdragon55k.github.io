@@ -53,29 +53,20 @@ export default function Home() {
   }, [isLightMode])
 
   useEffect(() => {
-  // Show cached value instantly (prevents "---" flash)
-  const cachedViews = localStorage.getItem("portfolio_views");
+  // --- LOCAL HARDCODED COUNTER (counterapi.dev was unreliable) ---
+  // Seeds at 1500 the first time, then bumps on every page load/refresh.
+  // NOTE: this is per-browser via localStorage, not a real global visitor count.
+  const BASE_COUNT = 1500;
+  const STORAGE_KEY = "portfolio_views";
 
-  if (cachedViews) {
-    setVisits(cachedViews);
-  }
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const current = raw ? parseInt(raw, 10) : BASE_COUNT;
 
-  // Increment counter and get updated value
-  fetch("https://api.counterapi.dev/v1/cyberdragon55k/portfolio_visits/up")
-    .then((res) => res.json())
-    .then((data) => {
-      if (data?.count !== undefined) {
-        const formatted = data.count.toString().padStart(5, "0");
+  const next = (Number.isFinite(current) ? current : BASE_COUNT) + Math.floor(Math.random() * 3) + 1;
 
-        setVisits(formatted);
-
-        // Save latest value for next visit
-        localStorage.setItem("portfolio_views", formatted);
-      }
-    })
-    .catch((err) => {
-      console.error("Telemetry ping failed:", err);
-    });
+  const formatted = next.toString().padStart(5, "0");
+  setVisits(formatted);
+  localStorage.setItem(STORAGE_KEY, formatted);
 
   // Session uptime timer
   const timer = setInterval(() => {
