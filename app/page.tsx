@@ -53,20 +53,91 @@ export default function Home() {
   }, [isLightMode])
 
   useEffect(() => {
-  // --- LOCAL HARDCODED COUNTER (counterapi.dev was unreliable) ---
-  // Seeds at 1500 the first time, then bumps on every page load/refresh.
-  // NOTE: this is per-browser via localStorage, not a real global visitor count.
-  const BASE_COUNT = 1500;
-  const STORAGE_KEY = "portfolio_views";
+  // --- PAGE VIEW COUNTER + BACKUP COUNTER ---
+  // Show cached value instantly (prevents "---" flash)
+  const cachedViews = localStorage.getItem("portfolio_views");
 
-  const raw = localStorage.getItem(STORAGE_KEY);
-  const current = raw ? parseInt(raw, 10) : BASE_COUNT;
+  if (cachedViews) {
+    setVisits(cachedViews);
+  }
 
-  const next = (Number.isFinite(current) ? current : BASE_COUNT) + Math.floor(Math.random() * 3) + 1;
+  // PRIMARY COUNTER — ABACUS
+  const primaryCounter =
+    "https://abacus.jasoncameron.dev/hit/adityanamdeo.qzz.io/visits";
 
-  const formatted = next.toString().padStart(5, "0");
-  setVisits(formatted);
-  localStorage.setItem(STORAGE_KEY, formatted);
+  // BACKUP COUNTER — AVIKALP
+  const backupCounter =
+    "https://counter.avikalp.workers.dev/api/adityanamdeo.qzz.io/views/main-landing?format=svg&label=views";
+
+  // 1. TRY PRIMARY COUNTER (ABACUS)
+  fetch(primaryCounter)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Primary counter HTTP ${res.status}`);
+      }
+
+      return res.json();
+    })
+    .then((data) => {
+      if (typeof data?.value !== "number") {
+        throw new Error("Invalid primary counter response");
+      }
+
+      const formatted = data.value.toString().padStart(5, "0");
+
+      setVisits(formatted);
+      localStorage.setItem("portfolio_views", formatted);
+
+      console.log("✅ Abacus counter:", data.value);
+    })
+    // 2. PRIMARY FAILED -> TRY BACKUP (AVIKALP)
+    .catch((primaryError) => {
+      console.warn(
+        "⚠️ Abacus failed. Switching to Avikalp backup.",
+        primaryError
+      );
+
+      fetch(backupCounter)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Backup counter HTTP ${res.status}`);
+          }
+
+          return res.text();
+        })
+        .then((svg) => {
+          // Avikalp returns SVG — extract the numeric counter value
+          const numbers = svg.match(/>\s*(\d+)\s*</g);
+
+          if (!numbers || numbers.length === 0) {
+            throw new Error("Could not read Avikalp counter value");
+          }
+
+          const lastNumber = numbers[numbers.length - 1].replace(/[^\d]/g, "");
+          const count = Number(lastNumber);
+
+          if (!Number.isFinite(count)) {
+            throw new Error("Invalid Avikalp counter value");
+          }
+
+          const formatted = count.toString().padStart(5, "0");
+
+          setVisits(formatted);
+          localStorage.setItem("portfolio_views", formatted);
+
+          console.log("🟡 Avikalp backup counter:", count);
+        })
+        // 3. BOTH FAILED -> KEEP CACHED VALUE
+        .catch((backupError) => {
+          console.error("❌ Both counters failed.", backupError);
+
+          const cached = localStorage.getItem("portfolio_views");
+
+          if (cached) {
+            setVisits(cached);
+          }
+        });
+    });
 
   // Session uptime timer
   const timer = setInterval(() => {
