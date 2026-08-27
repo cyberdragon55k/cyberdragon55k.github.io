@@ -391,7 +391,7 @@ export default function Home() {
         </section>
 
         {/* SEC_02: Portfolio Deployments */}
-        <section id="experience" style={{ scrollMarginTop: "80px", marginTop: "80px", marginBottom: "80px" }} className="font-mono">
+        <section id="work" style={{ scrollMarginTop: "80px", marginTop: "80px", marginBottom: "80px" }} className="font-mono">
           <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid var(--border-color)", paddingBottom: "8px", marginBottom: "40px" }}>
             <span style={{ color: "var(--accent-retro)", fontSize: "0.8rem", fontWeight: "bold" }}>[ SEC_02 // PORTFOLIO_DEPLOYMENTS ]</span>
           </div>
@@ -631,70 +631,67 @@ export default function Home() {
 
       <div className="container">
         {/* SEC_04: Interactive Terminal Console Section */}
-<section
-  className="terminal-section"
-  id="skills"
-  style={{
-    scrollMarginTop: "80px",
-    marginTop: "80px",
-    marginBottom: "80px"
-  }}
-  onClick={() => inputRef.current?.focus()}
->
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      borderBottom: "1px solid var(--border-color)",
-      paddingBottom: "8px",
-      marginBottom: "40px"
-    }}
-  >
-    <span
-      style={{
-        color: "var(--accent-retro)",
-        fontSize: "0.8rem",
-        fontWeight: "bold"
-      }}
-    >
-      [ SEC_04 // SKILLS_CONSOLE ]
-    </span>
-  </div>
-
-  <div className="terminal-header">SYSTEM_CONSOLE.EXE</div>
-
-          {/* ADDED THE REF HERE and REMOVED THE DUMMY DIV AT THE BOTTOM */}
-          <div 
-            ref={terminalContainerRef} 
-            style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "500px", overflowY: "auto", marginBottom: "12px", paddingRight: "4px" }}
+        <section
+          id="skills"
+          style={{
+            scrollMarginTop: "80px",
+            marginTop: "80px",
+            marginBottom: "80px"
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              borderBottom: "1px solid var(--border-color)",
+              paddingBottom: "8px",
+              marginBottom: "40px"
+            }}
           >
-            {terminalHistory.map((line, idx) => (
-              <div key={idx} className="terminal-row" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: "1.4" }}>
-                {line.startsWith("guest@system:~$") ? (
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <span className="prompt" style={{ color: "var(--accent-retro)", fontWeight: "bold" }}>guest@system:~$</span>
-                    <span className="command" style={{ color: "var(--text-primary)" }}>{line.replace("guest@system:~$", "")}</span>
-                  </div>
-                ) : (
-                  <span className="output" style={{ color: "var(--text-secondary)", paddingLeft: "15px", display: "block" }}>
-                    {line}
-                  </span>
-                )}
-              </div>
-            ))}
+            <span
+              style={{
+                color: "var(--accent-retro)",
+                fontSize: "0.8rem",
+                fontWeight: "bold"
+              }}
+            >
+              [ SEC_04 // Interactive Terminal Console Section ]
+            </span>
           </div>
-
-          <form onSubmit={handleTerminalSubmit} style={{ display: "flex", alignItems: "center", width: "100%" }}>
-            <span className="prompt" style={{ whiteSpace: "nowrap", marginRight: "8px", fontWeight: "bold" }}>guest@system:~$</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={terminalInput}
-              onChange={(e) => setTerminalInput(e.target.value)}
-              placeholder="Enter system flag..."
-              style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "var(--text-primary)", fontFamily: "monospace", fontSize: "0.85rem", caretColor: "var(--accent-retro)" }}
-            />
-          </form>
+          {/* Terminal box itself — only this part gets the boxed/terminal styling now */}
+          <div className="terminal-section" onClick={() => inputRef.current?.focus()}>
+            <div className="terminal-header">SYSTEM_CONSOLE.EXE</div>
+            <div
+              ref={terminalContainerRef}
+              style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "500px", overflowY: "auto", marginBottom: "12px", paddingRight: "4px" }}
+            >
+              {terminalHistory.map((line, idx) => (
+                <div key={idx} className="terminal-row" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: "1.4" }}>
+                  {line.startsWith("guest@system:~$") ? (
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <span className="prompt" style={{ color: "var(--accent-retro)", fontWeight: "bold" }}>guest@system:~$</span>
+                      <span className="command" style={{ color: "var(--text-primary)" }}>{line.replace("guest@system:~$", "")}</span>
+                    </div>
+                  ) : (
+                    <span className="output" style={{ color: "var(--text-secondary)", paddingLeft: "15px", display: "block" }}>
+                      {line}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <form onSubmit={handleTerminalSubmit} style={{ display: "flex", alignItems: "center", width: "100%" }}>
+              <span className="prompt" style={{ whiteSpace: "nowrap", marginRight: "8px", fontWeight: "bold" }}>guest@system:~$</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={terminalInput}
+                onChange={(e) => setTerminalInput(e.target.value)}
+                placeholder="Enter system flag..."
+                style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "var(--text-primary)", fontFamily: "monospace", fontSize: "0.85rem", caretColor: "var(--accent-retro)" }}
+              />
+            </form>
+          </div>
         </section>
 
         {/* SEC_05: Communication Port */}
@@ -790,8 +787,8 @@ export default function Home() {
               <a href="https://www.linkedin.com/in/adityanamdeo" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ LINKEDIN ]</a>
               <a href="https://x.com/cyberdragon55k" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ TWITTER ]</a>
               <a href="https://www.kaggle.com/adityanamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ KAGGLE ]</a>
-              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ HUGGINGFACE]</a>
-              <a href="mailto:aditya5namdeo@gmail.com" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ SECURE_PING]</a>
+              <a href="https://huggingface.co/AdityaNamdev" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ HUGGINGFACE ]</a>
+              <a href="mailto:aditya5namdeo@gmail.com" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ SECURE_PING ]</a>
               <a href="https://discordapp.com/users/824946274721202176" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ DISCORD ]</a>
               <a href="/AdityaNamdeoResume.pdf" target="_blank" rel="noopener noreferrer" className="glitch-hover" style={{ color: "var(--text-primary)", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", border: "1px solid var(--border-color)", background: "var(--surface)", padding: "12px 16px", fontSize: "0.75rem", transition: "all 0.2s" }}>[ RESUME_PDF ]</a>
             </div>
@@ -802,7 +799,7 @@ export default function Home() {
             <div style={{ position: "absolute", bottom: "-1px", right: "-1px", width: "12px", height: "12px", borderBottom: "2px solid var(--text-primary)", borderRight: "2px solid var(--text-primary)" }}></div>
 
             <pre style={{ fontFamily: "monospace", fontSize: "clamp(0.3rem, 1vw, 0.6rem)", color: "var(--text-secondary)", lineHeight: "1.1", textAlign: "left", marginBottom: "24px", marginTop: "8px", fontWeight: "bold", whiteSpace: "pre", maxWidth: "100%", overflowX: "auto", paddingBottom: "10px" }}>
-              {` █████╗ ██████╗ ██╗████████╗██╗   ██╗ █████╗     ███╗   ██╗ █████╗ ███╗   ███╗██████╗ ███████╗ ██████╗ 
+              {` █████╗ ██████╗ ██╗████████╗██╗   ██╗ █████╗     ███╗   ██╗ █████╗ ███╗   ███╗██████╗ ███████╗ ██████╗
 ██╔══██╗██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝██╔══██╗    ████╗  ██║██╔══██╗████╗ ████║██╔══██╗██╔════╝██╔═══██╗
 ███████║██║  ██║██║   ██║    ╚████╔╝ ███████║    ██╔██╗ ██║███████║██╔████╔██║██║  ██║█████╗  ██║   ██║
 ██╔══██║██║  ██║██║   ██║     ╚██╔╝  ██╔══██║    ██║╚██╗██║██╔══██║██║╚██╔╝██║██║  ██║██╔══╝  ██║   ██║

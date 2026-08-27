@@ -1,0 +1,132 @@
+ .gitignore                                         |   2 [32m+[m[31m-[m
+ 404.html                                           |   1 [31m-[m
+ __next.__PAGE__.txt                                |   9 [31m-[m
+ __next._full.txt                                   |  25 [31m-[m
+ __next._head.txt                                   |   8 [31m-[m
+ __next._index.txt                                  |   7 [31m-[m
+ __next._tree.txt                                   |   8 [31m-[m
+ _next/static/chunks/0adad9caa983f385.js            |   1 [31m-[m
+ _next/static/chunks/1e086dccfb274931.js            |   1 [31m-[m
+ _next/static/chunks/456cdd6c21d91c32.js            |   1 [31m-[m
+ _next/static/chunks/86f8189d06779899.js            |   1 [31m-[m
+ _next/static/chunks/8a80c7f2aa2a8276.js            |   4 [31m-[m
+ _next/static/chunks/bfec7e2d2002d13e.js            |   2 [31m-[m
+ _next/static/chunks/cde8e0d902e5316f.css           |   2 [31m-[m
+ _next/static/chunks/e25be0f79ce0e4ad.css           |   3 [31m-[m
+ _next/static/chunks/e642392fea0d875a.js            |   1 [31m-[m
+ _next/static/chunks/turbopack-d7e86c1af28f499f.js  |   3 [31m-[m
+ .../static/media/4fa387ec64143e14-s.c36e1862.woff2 | Bin [31m12904[m -> [32m0[m bytes
+ .../static/media/5ce348bf30bf5439-s.ebceb24d.woff2 | Bin [31m6172[m -> [32m0[m bytes
+ .../static/media/6306c77e7c8268e4-s.ff4a2084.woff2 | Bin [31m5788[m -> [32m0[m bytes
+ .../media/797e433ab948586e-s.p.479bea2b.woff2      | Bin [31m29972[m -> [32m0[m bytes
+ .../static/media/7d817b4c03b0c5f1-s.f377b9c4.woff2 | Bin [31m7684[m -> [32m0[m bytes
+ .../static/media/bbc41e54d2fcbd21-s.d1207556.woff2 | Bin [31m14752[m -> [32m0[m bytes
+ .../_clientMiddlewareManifest.json                 |   1 [31m-[m
+ _not-found.html                                    |   1 [31m-[m
+ _not-found.txt                                     |  16 [31m-[m
+ _not-found/__next._full.txt                        |  16 [31m-[m
+ _not-found/__next._head.txt                        |   8 [31m-[m
+ _not-found/__next._index.txt                       |   7 [31m-[m
+ _not-found/__next._not-found.txt                   |   4 [31m-[m
+ _not-found/__next._not-found/__PAGE__.txt          |   5 [31m-[m
+ _not-found/__next._tree.txt                        |   3 [31m-[m
+ app/layout.tsx                                     |  34 [32m+[m[31m-[m
+ app/not-found.tsx                                  |  80 [32m++[m
+ app/page.tsx                                       | 933 [32m++++++++++++++++[m[31m-----[m
+ apple-icon.png                                     | Bin [31m2626[m -> [32m0[m bytes
+ hero-portrait.jpg                                  | Bin [31m1472870[m -> [32m0[m bytes
+ icon-dark-32x32.png                                | Bin [31m585[m -> [32m0[m bytes
+ icon-light-32x32.png                               | Bin [31m566[m -> [32m0[m bytes
+ icon.svg                                           |  26 [31m-[m
+ index.html                                         |   1 [31m-[m
+ index.txt                                          |  25 [31m-[m
+ next.config.mjs                                    |   5 [32m+[m[31m-[m
+ out/.nojekyll                                      |   1 [32m+[m
+ out/404.html                                       |   1 [32m+[m
+ out/404/index.html                                 |   1 [32m+[m
+ out/AdityaNamdeoResume.pdf                         | Bin [31m0[m -> [32m89632[m bytes
+ out/Avi.png                                        | Bin [31m0[m -> [32m1818105[m bytes
+ out/CNAME                                          |   1 [32m+[m
+ out/__next.__PAGE__.txt                            |   9 [32m+[m
+ out/__next._full.txt                               |  26 [32m+[m
+ out/__next._head.txt                               |   6 [32m+[m
+ out/__next._index.txt                              |   8 [32m+[m
+ out/__next._tree.txt                               |   8 [32m+[m
+ .../0XaK2HUHc5PJtx-WIVY5a}/_buildManifest.js       |   0
+ .../_clientMiddlewareManifest.js                   |   1 [32m+[m
+ .../static/0XaK2HUHc5PJtx-WIVY5a}/_ssgManifest.js  |   0
+ out/_next/static/chunks/01xlw8hd842-c.js           |   1 [32m+[m
+ .../_next/static/chunks/03~yq9q893hmn.js           |   0
+ out/_next/static/chunks/05vod_lwm5bym.js           |   6 [32m+[m
+ out/_next/static/chunks/07lhk_q6pmm3r.js           |   1 [32m+[m
+ out/_next/static/chunks/0d3shmwh5_nmn.js           |   1 [32m+[m
+ out/_next/static/chunks/0pqt~8bl3ukh4.js           |   4 [32m+[m
+ out/_next/static/chunks/0rja8obuhu34w.js           |   1 [32m+[m
+ out/_next/static/chunks/0t0lru1jo~ntk.css          |   3 [32m+[m
+ out/_next/static/chunks/0wij_kzqqjl6n.css          |   2 [32m+[m
+ out/_next/static/chunks/13b.1zrnxoedg.js           |   2 [32m+[m
+ out/_next/static/chunks/15c0qix6i5tua.js           |  31 [32m+[m
+ out/_next/static/chunks/15pe4_hpxnd28.js           |   1 [32m+[m
+ out/_next/static/chunks/turbopack-0kdr8ws-p3kis.js |   1 [32m+[m
+ .../media/0c795a286deabae8-s.p.14tvuu96~wkr0.woff2 | Bin
+ .../media/28e60ca39c9ae554-s.1841exvy3.1-g.woff2   | Bin
+ .../media/4ba802ed8e67eac5-s.04ygcc0k6zvvf.woff2   | Bin
+ .../media/4fa387ec64143e14-s.0wkzw~je483f-.woff2   | Bin [31m0[m -> [32m12872[m bytes
+ .../media/53b9e256198e5412-s.0-wfv7uh4i7h9.woff2   | Bin
+ .../media/5ce348bf30bf5439-s.0zgw-jeven.3w.woff2   | Bin [31m0[m -> [32m6204[m bytes
+ .../media/6306c77e7c8268e4-s.0rhz0arwfsn~5.woff2   | Bin [31m0[m -> [32m5892[m bytes
+ .../media/7178b3e590c64307-s.0nx0ww8fni_q3.woff2   | Bin
+ .../media/797e433ab948586e-s.p.08e28id.o-okb.woff2 | Bin [31m0[m -> [32m23108[m bytes
+ .../media/7d817b4c03b0c5f1-s.0l76wvqk9d84w.woff2   | Bin [31m0[m -> [32m7728[m bytes
+ .../media/8a480f0b521d4e75-s.0jzbimsg8vl84.woff2   | Bin
+ .../media/8d05cfa5faa8406c-s.p.0kbulo~7o8gic.woff2 | Bin
+ .../media/ab624315db63c58d-s.1487dfs7-.~d~.woff2   | Bin
+ .../media/b8f2b92a9960dd69-s.09-.4z_6a6fti.woff2   | Bin
+ .../media/bbc41e54d2fcbd21-s.0k4k9394f2q-k.woff2   | Bin [31m0[m -> [32m14712[m bytes
+ .../media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2 | Bin
+ .../media/d7a0600e467cf0bd-s.18awt9904y5ei.woff2   | Bin
+ .../media/dc0d9adbac686440-s.p.0~z396rbj0t4w.woff2 | Bin
+ .../media/e94b8ab81811a983-s.02fsf_1p_avhz.woff2   | Bin
+ .../media/fef07dbb0973bf53-s.12tyk43_3sh9u.woff2   | Bin
+ out/_not-found/__next._full.txt                    |  22 [32m+[m
+ out/_not-found/__next._head.txt                    |   6 [32m+[m
+ out/_not-found/__next._index.txt                   |   8 [32m+[m
+ out/_not-found/__next._not-found.txt               |   5 [32m+[m
+ out/_not-found/__next._not-found/__PAGE__.txt      |   9 [32m+[m
+ out/_not-found/__next._tree.txt                    |   3 [32m+[m
+ out/_not-found/index.html                          |   1 [32m+[m
+ out/_not-found/index.txt                           |  22 [32m+[m
+ out/apple-icon.png                                 | Bin [31m0[m -> [32m3564[m bytes
+ out/chanakya-niti.png                              | Bin [31m0[m -> [32m23484[m bytes
+ out/googlebd3cc8dcf548dd5b.html                    |   1 [32m+[m
+ out/hero-portrait.jpg                              | Bin [31m0[m -> [32m187486[m bytes
+ out/icon-dark-32x32.png                            | Bin [31m0[m -> [32m967[m bytes
+ out/icon-light-32x32.png                           | Bin [31m0[m -> [32m2687[m bytes
+ out/icon.svg                                       |   3 [32m+[m
+ out/index.html                                     |   6 [32m+[m
+ out/index.txt                                      |  26 [32m+[m
+ out/movie-recsys.png                               | Bin [31m0[m -> [32m1343362[m bytes
+ placeholder-logo.png => out/placeholder-logo.png   | Bin
+ placeholder-logo.svg => out/placeholder-logo.svg   |   0
+ placeholder-user.jpg => out/placeholder-user.jpg   | Bin
+ placeholder.jpg => out/placeholder.jpg             | Bin
+ placeholder.svg => out/placeholder.svg             |   0
+ out/used-bike.png                                  | Bin [31m0[m -> [32m2062153[m bytes
+ package-lock.json                                  |  83 [32m+[m[31m-[m
+ package.json                                       |   8 [32m+[m[31m-[m
+ pnpm-lock.yaml                                     | 447 [32m+++++++++[m[31m-[m
+ public/.nojekyll                                   |   0
+ public/AdityaNamdeoResume.pdf                      | Bin [31m0[m -> [32m89632[m bytes
+ public/Avi.png                                     | Bin [31m0[m -> [32m1818105[m bytes
+ public/CNAME                                       |   1 [32m+[m
+ public/apple-icon.png                              | Bin [31m2626[m -> [32m3564[m bytes
+ public/chanakya-niti.png                           | Bin [31m0[m -> [32m23484[m bytes
+ public/googlebd3cc8dcf548dd5b.html                 |   1 [32m+[m
+ public/hero-portrait.jpg                           | Bin [31m1472870[m -> [32m187486[m bytes
+ public/icon-dark-32x32.png                         | Bin [31m585[m -> [32m967[m bytes
+ public/icon-light-32x32.png                        | Bin [31m566[m -> [32m2687[m bytes
+ public/icon.svg                                    |  29 [32m+[m[31m-[m
+ public/movie-recsys.png                            | Bin [31m0[m -> [32m1343362[m bytes
+ public/used-bike.png                               | Bin [31m0[m -> [32m2062153[m bytes
+ styles/globals.css                                 | 456 [32m++++[m[31m------[m
+ 131 files changed, 1696 insertions(+), 801 deletions(-)
